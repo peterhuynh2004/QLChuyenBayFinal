@@ -6,6 +6,7 @@ from click import password_option
 from flask import Flask, url_for, flash
 from flask import render_template, request, redirect
 from flask.cli import routes_command
+from payos import PayOS
 from sqlalchemy import except_
 from sqlalchemy.testing.pickleable import User
 
@@ -17,15 +18,22 @@ from flask_mail import Message
 import random
 from flask import render_template
 from flask import session
-from flask_login import login_user, logout_user
-#Import moduls
-import utils
-# Import cần thiết để vẽ CharJS
-from sqlalchemy import func
-from models import TuyenBay, NguoiDung, ChuyenBay
 
+from flask_login import login_user, logout_user, current_user
 
-@app.route("/")
+# from dotenv import load_dotenv
+#
+#
+# load_dotenv()
+
+client_id = "acd90926-de08-4e7f-bb5d-1c5b2ba7997d"
+api_key = "e533c9d0-6d93-4986-8699-fedd9947c51a"
+checksum_key = "8db231c6edefe49255362836a6ef9debd289e70023b384147e18dfc10aeeba92"
+payOS = PayOS(client_id=client_id, api_key=api_key, checksum_key=checksum_key)
+# payOS = PayOS(client_id=os.environ.get('PAYOS_CLIENT_ID'), api_key=os.environ.get('PAYOS_API_KEY'), checksum_key=os.environ.get('PAYOS_CHECKSUM_KEY'))
+
+@app.route("/", methods=['get', 'post'])
+
 def index():
     return render_template('index.html')
 
