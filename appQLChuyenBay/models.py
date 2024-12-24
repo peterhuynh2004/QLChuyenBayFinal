@@ -268,8 +268,10 @@ class ThongTinHanhKhach(db.Model):
 
 if __name__ == '__main__':
     with app.app_context():
-        # db.drop_all()
-        # db.create_all()
+
+        db.drop_all()
+        db.create_all()
+
         # Tạo dữ liệu cho QuyDinhBanVe
         # # new_quy_dinh_ban_ve = QuyDinhBanVe(
         #     TenQuyDinh="Quy định bán vé",
@@ -282,6 +284,7 @@ if __name__ == '__main__':
         # # Thêm dữ liệu vào cơ sở dữ liệu
         # db.session.add(new_quy_dinh_ban_ve)
         # db.session.commit()
+
 
         # print("Đã tạo dữ liệu cho QuyDinhBanVe.")
         # Tạo dữ liệu cho quy định sân bay
@@ -302,42 +305,48 @@ if __name__ == '__main__':
         #
         # print("Đã tạo dữ liệu cho quy định sân bay.")
 
-        # data Vé Chuyến bay
+        # Thêm dữ liệu vào cơ sở dữ liệu
+        # db.session.add(new_quy_dinh_san_bay)
+        # db.session.commit()
+
+        # print("Đã tạo dữ liệu cho quy định sân bay.")
+        #
+        # #data Vé Chuyến bay
         # vechuyenbay1 = VeChuyenBay(giaVe=2000000, maThongTin=1, hangVe=2, soGhe=5, giaHanhLy=500000,
         #                            thoiGianDat=datetime.utcnow(), id_user=1, id_ChuyenBay=1)
         # vechuyenbay2 = VeChuyenBay(giaVe=2500000, maThongTin=2, hangVe=1, soGhe=10, giaHanhLy=600000,
         #                            thoiGianDat=datetime.utcnow(), id_user=2, id_ChuyenBay=2)
         # db.session.add_all([vechuyenbay1, vechuyenbay2])
         # db.session.commit()
-
-        # data ThongTinHanhKhach
+        #
+        # #data ThongTinHanhKhach
         # thongtinhk1 = ThongTinHanhKhach(HoTen="Nguyễn Văn A", CCCD="123456789012", SDT="123456789", ID_User=2)
         # thongtinhk2 = ThongTinHanhKhach(HoTen="Trần Thị B", CCCD="987654321098", SDT="987654321", ID_User=2)
         # db.session.add_all([thongtinhk1, thongtinhk2])
         # db.session.commit()
-
-        # data NguoiDung_VaiTro
+        #
+        # #data NguoiDung_VaiTro
         # nguoidung_vaitro1 = NguoiDung_VaiTro(ID_User=1, ID_VaiTro=UserRole.NhanVien)
         # nguoidung_vaitro2 = NguoiDung_VaiTro(ID_User=2, ID_VaiTro=UserRole.NguoiQuanTri)
         # db.session.add_all([nguoidung_vaitro1, nguoidung_vaitro2])
         # db.session.commit()
-
-        # data Người Dùng
+        #
+        # #data Người Dùng
         # nguoidung1 = NguoiDung(HoTen="Nguyễn Văn A", Email="nguyenvana@example.com", SDT=123456789,
         #                        TenDangNhap="nguyenvana", MatKhau="password123", GioiTinh="Nam", DiaChi=1)
         # nguoidung2 = NguoiDung(HoTen="Trần Thị B", Email="tranthib@example.com", SDT=987654321, TenDangNhap="tranthib",
         #                        MatKhau="password456", GioiTinh="Nữ", DiaChi=2)
         # db.session.add_all([nguoidung1, nguoidung2])
         # db.session.commit()
-
-        # địa chỉ
+        #
+        # #địa chỉ
         # diachi1 = DiaChi(ChiTiet="Số 1, Đường A", TenDuong="Đường A", QuanHuyen="Quận 1",
         #                  TinhTP="Thành phố Hồ Chí Minh")
         # diachi2 = DiaChi(ChiTiet="Số 2, Đường B", TenDuong="Đường B", QuanHuyen="Quận 2", TinhTP="Hà Nội")
         # db.session.add_all([diachi1, diachi2])
         # db.session.commit()
-
-        # data chuyen bay
+        #
+        # #data chuyen bay
         # chuyenbay1 = ChuyenBay(id_TuyenBay=1, gio_Bay=datetime(2024, 12, 15, 9, 0),
         #                        tG_Bay=datetime(2024, 12, 15, 9, 30), GH1=50, GH2=100, GH1_DD=10, GH2_DD=20)
         # chuyenbay2 = ChuyenBay(id_TuyenBay=2, gio_Bay=datetime(2024, 12, 16, 12, 0),
@@ -346,8 +355,8 @@ if __name__ == '__main__':
         #                        tG_Bay=datetime(2024, 12, 17, 8, 0), GH1=60, GH2=110, GH1_DD=12, GH2_DD=18)
         # db.session.add_all([chuyenbay1, chuyenbay2, chuyenbay3])
         # db.session.commit()
-
-        # themdatatuyenbay
+        #
+        # #themdatatuyenbay
         # tuyenbay1 = TuyenBay(tenTuyen="Côn Đảo - Tân Sơn Nhất", id_SanBayDi=1, id_SanBayDen=11, doanhThu=50000000,
         #                      soLuotBay=150, tyLe=90)
         # tuyenbay2 = TuyenBay(tenTuyen="Phù Cát - Nội Bài", id_SanBayDi=2, id_SanBayDen=10, doanhThu=30000000,
@@ -358,11 +367,13 @@ if __name__ == '__main__':
         #                      soLuotBay=80, tyLe=80)
         # db.session.add_all([tuyenbay1, tuyenbay2, tuyenbay3, tuyenbay4])
         # db.session.commit()
-
-        #db.create_all()
+        #
+        # db.create_all()
         # db.drop_all()
 
+
         # data sân bay
+
         # airports = [
         #     {"Sanbay": "Côn Đảo", "Tinh": "Bà Rịa – Vũng Tàu"},
         #     {"Sanbay": "Phù Cát", "Tinh": "Bình Định"},
@@ -393,7 +404,7 @@ if __name__ == '__main__':
         #                   DiaChi=p['Tinh'])
         #     db.session.add(prod)
         # db.session.commit()
-
+        #
         # tuyenbay_data = [
         #     {
         #         "tenTuyen": "Côn Đảo - Phù Cát",
@@ -561,8 +572,8 @@ if __name__ == '__main__':
         #     tuyenbay = TuyenBay(**t)
         #     db.session.add(tuyenbay)
         # db.session.commit()
-
-
+        #
+        #
         # flights = [
         #     {
         #         "id_TuyenBay": 1,
@@ -624,7 +635,7 @@ if __name__ == '__main__':
         #     flight = ChuyenBay(**f)
         #     db.session.add(flight)
         # db.session.commit()
-
+        #
         # # địa chỉ
         # diachi1 = DiaChi(ChiTiet="Số 1, Đường A", TenDuong="Đường A", QuanHuyen="Quận 1",
         #                  TinhTP="Thành phố Hồ Chí Minh")
@@ -724,26 +735,27 @@ if __name__ == '__main__':
         # ]
         # db.session.add_all(banggiave_data)
         # db.session.commit()
-
-        # data NguoiDung_VaiTro
+        #
+        # #data NguoiDung_VaiTro
         # nguoidung_vaitro1 = NguoiDung_VaiTro(ID_User=1, ID_VaiTro=UserRole.NhanVien)
         # nguoidung_vaitro2 = NguoiDung_VaiTro(ID_User=2, ID_VaiTro=UserRole.NguoiQuanTri)
         # db.session.add_all([nguoidung_vaitro1, nguoidung_vaitro2])
         # db.session.commit()
-
-        # data ThongTinHanhKhach
+        #
+        # #data ThongTinHanhKhach
         # thongtinhk1 = ThongTinHanhKhach(HoTen="Nguyễn Văn A", CCCD="123456789012", SDT="123456789", ID_User=2)
         # thongtinhk2 = ThongTinHanhKhach(HoTen="Trần Thị B", CCCD="987654321098", SDT="987654321", ID_User=2)
         # db.session.add_all([thongtinhk1, thongtinhk2])
         # db.session.commit()
         #
+
         # data Vé Chuyến bay
-        vechuyenbay1 = VeChuyenBay(giaVe=2000000, maThongTin=1, hangVe=2, soGhe=5, giaHanhLy=500000,
-                                   thoiGianDat=datetime.utcnow(), id_user=1, id_ChuyenBay=1)
-        vechuyenbay2 = VeChuyenBay(giaVe=2500000, maThongTin=2, hangVe=1, soGhe=10, giaHanhLy=600000,
-                                   thoiGianDat=datetime.utcnow(), id_user=2, id_ChuyenBay=2)
-        db.session.add_all([vechuyenbay1, vechuyenbay2])
-        db.session.commit()
+        # vechuyenbay1 = VeChuyenBay(giaVe=2000000, maThongTin=1, hangVe=2, soGhe=5, giaHanhLy=500000,
+        #                            thoiGianDat=datetime.utcnow(), id_user=1, id_ChuyenBay=1)
+        # vechuyenbay2 = VeChuyenBay(giaVe=2500000, maThongTin=2, hangVe=1, soGhe=10, giaHanhLy=600000,
+        #                            thoiGianDat=datetime.utcnow(), id_user=2, id_ChuyenBay=2)
+        # db.session.add_all([vechuyenbay1, vechuyenbay2])
+        # db.session.commit()
 
 
 
@@ -751,6 +763,22 @@ if __name__ == '__main__':
 
 
         # data chuyen bay
+
+        # # data Vé Chuyến bay
+        # vechuyenbay1 = VeChuyenBay(giaVe=2000000, maThongTin=1, hangVe=2, soGhe=5, giaHanhLy=500000,
+        #                            thoiGianDat=datetime.utcnow(), id_user=1, id_ChuyenBay=1)
+        # vechuyenbay2 = VeChuyenBay(giaVe=2500000, maThongTin=2, hangVe=1, soGhe=10, giaHanhLy=600000,
+        #                            thoiGianDat=datetime.utcnow(), id_user=2, id_ChuyenBay=2)
+        # db.session.add_all([vechuyenbay1, vechuyenbay2])
+        # db.session.commit()
+        #
+        #
+        #
+        #
+        #
+        #
+        # #data chuyen bay
+
         # chuyenbay1 = ChuyenBay(id_TuyenBay=1, gio_Bay=datetime(2024, 12, 15, 9, 0),
         #                        tG_Bay=datetime(2024, 12, 15, 9, 30), GH1=50, GH2=100, GH1_DD=10, GH2_DD=20)
         # chuyenbay2 = ChuyenBay(id_TuyenBay=2, gio_Bay=datetime(2024, 12, 16, 12, 0),
@@ -759,8 +787,8 @@ if __name__ == '__main__':
         #                        tG_Bay=datetime(2024, 12, 17, 8, 0), GH1=60, GH2=110, GH1_DD=12, GH2_DD=18)
         # db.session.add_all([chuyenbay1, chuyenbay2, chuyenbay3])
         # db.session.commit()
-
-        # themdatatuyenbay
+        #
+        # #themdatatuyenbay
         # tuyenbay1 = TuyenBay(tenTuyen="Côn Đảo - Tân Sơn Nhất", id_SanBayDi=1, id_SanBayDen=11, doanhThu=50000000,
         #                      soLuotBay=150, tyLe=90)
         # tuyenbay2 = TuyenBay(tenTuyen="Phù Cát - Nội Bài", id_SanBayDi=2, id_SanBayDen=10, doanhThu=30000000,

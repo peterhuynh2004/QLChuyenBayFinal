@@ -1,0 +1,132 @@
+{% extends "admin.html" %}
+
+{% block title %}
+Thống Kê Báo Cáo
+{% endblock %}
+
+{% block sidebar %}
+{{ super() }}
+<script>
+    document.querySelectorAll('.sidebar a').forEach(link => {
+        link.classList.remove('active');
+    });
+    document.querySelector('.sidebar a[href="{{ url_for('thongkebaocao') }}?id=123"]').classList.add('active');
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+<h1>Thống Kê Báo Cáo Doanh Thu</h1>
+
+<div class="view-header">
+    <form method="GET" action="{{ url_for('thongkebaocao') }}" class="month-selector">
+        <label for="month">Chọn tháng:</label>
+        <select name="month" id="month" onchange="this.form.submit()">
+            <option value="all" {% if selected_month == 'all' %}selected{% endif %}>Tất cả</option>
+            {% for i in range(1, 13) %}
+            <option value="{{ i }}" {% if selected_month|int == i %}selected{% endif %}>Tháng {{ i }}</option>
+            {% endfor %}
+        </select>
+    </form>
+</div>
+<div class="view-controls">
+    <button onclick="switchView('table')">Table View</button>
+    <button onclick="switchView('chart')">Chart View</button>
+</div>
+
+
+<div id="tableView" style="display: block;">
+    <table>
+        <tr>
+            <th>STT</th>
+            <th>Tuyến Bay</th>
+            <th>Doanh Thu</th>
+            <th>Số Lượt Bay</th>
+            <th>Tỷ Lệ</th>
+        </tr>
+        {% for item in data %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ item.tenTuyen }}</td>
+            <td>{{ item.doanhThu }}</td>
+            <td>{{ item.soLuotBay }}</td>
+            <td>{{ item.tyLe }}%</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div id="chartView" style="display: none;">
+    <div class="chart_types">
+        <button onclick="setChartType('bar')">Biểu đồ cột</button>
+        <button onclick="setChartType('line')">Biểu đồ đường</button>
+        <button onclick="setChartType('doughnut')">Biểu đồ tròn</button>
+        <button onclick="setChartType('polarArea')">Biểu đồ lưới</button>
+        <button onclick="setChartType('radar')">Radar</button>
+    </div>
+    <canvas id="myChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+let labels = {{ labels|tojson }};
+let values = {{ values|tojson }};
+let myChart = null;
+let currentType = 'bar';
+
+function setChartType(type) {
+    currentType = type;
+    if (myChart) {
+        myChart.destroy();
+    }
+    renderChart();
+}
+
+function renderChart() {
+    const ctx = document.getElementById('myChart').getContext('2d');
+    myChart = new Chart(ctx, {
+        type: currentType,
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Thống kê tổng',
+                data: values,
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+}
+
+function switchView(view) {
+    if (view === 'chart') {
+        document.getElementById('tableView').style.display = 'none';
+        document.getElementById('chartView').style.display = 'block';
+    } else {
+        document.getElementById('tableView').style.display = 'block';
+        document.getElementById('chartView').style.display = 'none';
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    renderChart();  // Load chart with initial settings
+});
+</script>
+{% endblock %}
