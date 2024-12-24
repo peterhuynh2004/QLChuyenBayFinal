@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vé Chuyến Bay</title>
+    <style>
+        .btn {
+        margin-top: 10px;
+        padding: 5px 10px;
+        color: green;
+        font-size: 1.8rem;
+        font-weight: 700;
+        border-radius: 15px;
+    }
+    </style>
+</head>
+<body>
+    <h1>VÉ CHUYẾN BAY</h1>
+
+<h3>Thông tin hành khách:</h3>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Chuyến bay</th>
+            <th>Hành khách</th>
+            <th>CMND/CCCD</th>
+            <th>Điện thoại</th>
+            <th>Hạng vé</th>
+            <th>Giá tiền</th>
+            <th>Số ghế</th>
+            <th>Loại ghế</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for info in seats_info %}
+        <tr>
+            <td>{{ tenTuyen }}</td>
+            <td>{{ info.passenger.name }}</td>
+            <td>{{ info.passenger.cccd }}</td>
+            <td>{{ info.passenger.phone }}</td>
+            <td>{{ 'Hạng nhất' if info.seat.class == 'Hạng nhất' else 'Hạng phổ thông' }}</td>
+            <td>{{ info.seat.price }} VNĐ</td>
+            <td>{{ info.seat.seatNumber }}</td>
+            <td>{{ info.seat.class }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<form action="{{ url_for('chucnang') }}" method="get" style="display: inline-block;">
+    <button class="btn" type="submit">Chức năng</button>
+</form>
+<form action="{{ url_for('danhsachchuyenbay') }}" method="get" style="display: inline-block;">
+    <button class="btn" type="submit">Danh sách chuyến bay</button>
+</form>
+</body>
+</html>

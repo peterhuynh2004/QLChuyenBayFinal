@@ -1,0 +1,139 @@
+{% extends 'layout/base.html' %}
+{% block content %}
+
+<div id="formStep1" class="form-container active">
+    <form id="form1" method="POST" action="{{ url_for('datveonline') }}" name="form1">
+        <div>
+            <h1 style="text-align: center; color: darkblue; background-color: lightblue; font-size: 20px; padding: 10px">
+                THÔNG TIN VÉ BAY CHUYẾN: FL{{  session['maChuyenBay'] }}
+            </h1>
+            <div class="row" style="width: 100%; margin: 0; padding-top: 9px ">
+                <div class="col-md-5 p-2" style="display: flex; align-items: center; gap: 10px; width: 100%">
+                    <div style=" font-size: 20px; width: 25%; padding-bottom: 12px; padding-left: 7px;"> Chọn loại hạng ghế:</div>
+                    <select class="form-select form-control form-group" id="hangGhe" name="hangGhe" style="width: 30%">
+                        <option value="" selected>Chọn hạng ghế</option>
+                        <option value="1">Hạng 1</option>
+                        <option value="2">Hạng 2</option>
+
+                    </select>
+                    <p style=" font-size: 20px; padding-bottom: 12px; padding-left: 7px;" > Giá vé: {{ amount }} </p>
+                    <input type="number" value="1000000" disabled>
+                </div>
+                <div class="error-message" id="hangGheError" style="width: 50%"></div>
+            </div>
+        </div>
+
+        {% if veNguoiLon %}
+            <h1 style=" color: blue; background-color:#fdf0df; font-size: 20px; padding: 10px">
+                        THÔNG TIN VÉ NGƯỜI LỚN
+            </h1>
+            {% for v in range(0, veNguoiLon) %}
+                <h1 style="text-align: center; color: blue; background-color: lightblue; font-size: 20px; padding: 10px">
+                    THÔNG TIN HÀNH KHÁCH {{ v + 1 }}
+                </h1>
+                <div>
+                    <div class="form-group">
+                        <input type="text" class="form-control fullName" name="fullNameNguoiLon[{{ v }}]"
+                               placeholder="Nhập họ và tên hành khách" required>
+                        <div class="error-message fullNameError" ></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control phone"  name="phone[{{ v }}]" placeholder="Nhập số điện thoại:"
+                               required>
+                        <div class="error-message phoneError" ></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="form-control email" name="email[{{ v }}]" placeholder="Nhập email: " required>
+                        <div class="error-message emailError" ></div>
+                    </div>
+                    <div class="form-group" >
+                        <div class="form-control">Điền ngày tháng năm sinh:
+                            <input type="date"  style="width: 30%" required name="ngaySinhNguoiLon[{{ v }}]">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control cccd"  name="cccd[{{ v }}]" placeholder="Nhập căn cước công dân:"
+                               required>
+                        <div class="error-message cccdError" ></div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if veTreEm %}
+            <h1 style=" color: blue; background-color:#fdf0df; font-size: 20px; padding: 10px">
+                        THÔNG TIN VÉ TRẺ EM
+            </h1>
+            {% for v in range(0, veTreEm) %}
+                <h1 style="text-align: center; color: blue; background-color: lightblue; font-size: 20px; padding: 10px">
+                    THÔNG TIN HÀNH KHÁCH {{ v + 1}}
+                </h1>
+                <div>
+                    <div class="form-group">
+                        <input type="text" class="form-control fullName" name="fullNameTreEm[{{ v }}]"
+                               placeholder="Nhập họ và tên hành khách" required>
+                        <div class="error-message fullNameError" ></div>
+                    </div>
+                    <div class="form-group" >
+                        <div class="form-control">Điền ngày tháng năm sinh:
+                            <input type="date"  style="width: 30%" required name="ngaySinhTreEm[{{ v }}]">
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if veEmBe %}
+        <h1 style=" color: blue; background-color:#fdf0df; font-size: 20px; padding: 10px">
+                    THÔNG TIN VÉ EM BÉ
+        </h1>
+            {% for v in range(0, veEmBe) %}
+                <h1 style="text-align: center; color: blue; background-color: lightblue; font-size: 20px; padding: 10px">
+                    THÔNG TIN HÀNH KHÁCH {{ v + 1}}
+                </h1>
+                <div>
+                    <div class="form-group">
+                        <input type="text" class="form-control fullName" name="fullNameEmBe[{{ v }}]"
+                               placeholder="Nhập họ và tên hành khách" required>
+                        <div class="error-message fullNameError" ></div>
+                    </div>
+                    <div class="form-group" >
+                        <div class="form-control">Điền ngày tháng năm sinh:
+                            <input type="date"  style="width: 30%" required name="ngaySinhEmBe[{{ v }}]" >
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+        <div class="button form-container">
+            <button id="prev" class="btn btn-warning" type="button"> Quay lại</button>
+            <button type="submit" name="form1_submit" onclick="kiemTraThongTin(event, 2)" class="btn btn-primary"
+                    value="Tiep tuc" style="width: 30%">Tiếp tục
+            </button>
+        </div>
+    </form>
+</div>
+
+<style>
+    /* Đảm bảo cha bao quanh nút là container flex */
+    .form-container {
+        display: flex;
+        justify-content: center; /* Căn giữa theo chiều ngang */
+        align-items: center; /* Căn giữa theo chiều dọc (nếu cần) */
+        gap: 10px; /* Khoảng cách giữa các nút */
+    }
+
+    /* Đảm bảo nút có cùng kích thước nếu cần */
+    .btn {
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+</style>
+
+<script>
+    // Xử lý nút "Quay lại"
+    document.getElementById('prev').addEventListener('click', function () {
+        window.history.back(); // Quay lại trang trước
+    });
+</script>
+{% endblock %}

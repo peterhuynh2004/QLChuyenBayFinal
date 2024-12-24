@@ -1,0 +1,70 @@
+<header class="header">
+    <div class="content nav-content">
+        <nav class="navbar">
+
+
+
+            <!-- Logo -->
+            <div class="Logo-nav">
+                <a href="./" class="Logo">
+                    <img
+                            src="https://res.cloudinary.com/ddgxultsd/image/upload/v1732555525/logo1.png"
+                            alt="Logo"
+                            class="lg1"
+                    />
+                    <img
+                            src="https://res.cloudinary.com/ddgxultsd/image/upload/v1732816111/logo2.png"
+                            alt="Logo"
+                            class="lg2"
+                    />
+                </a>
+            </div>
+
+            <!-- Navigation pc-->
+            <ul class="nav-items">
+                <li>
+                    <a href="./" class="item"
+                    >Trang&nbsp;chủ</a
+                    >
+                </li>
+                <li>
+                    <a href="/huong_dan_dat_cho" class="item"
+                    >Hướng dẫn đặt chỗ</a
+                    >
+                </li>
+                <li>
+                    <a href="./kiem_tra_ma" class="item"
+                    >Kiểm tra mã đặt chỗ</a
+                    >
+                </li>
+            </ul>
+
+            <!-- Button -->
+            <div class="actions">
+
+                {% if current_user.is_authenticated %}
+                    <li class="nav-item dropdown btn">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            {{ current_user.HoTen }}
+                        </a>
+                        <ul class="dropdown-menu dropmn">
+                                <li id="change-info-btn"><a class="dropdown-item" href="/chuc_nang">Chức năng</a></li>
+                            <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                <a href="/register" class="pro btn">
+                    <path
+                            d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"
+                    ></path>
+                    </svg>
+                    <p>Đăng ký</p>
+                </a>
+                <a href="/login" class="log btn" id="log">
+                    <p class="text">Đăng&nbsp;nhập</p>
+                </a>
+                {% endif %}
+            </div>
+        </nav>
+    </div>
+</header>

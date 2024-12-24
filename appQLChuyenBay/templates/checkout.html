@@ -1,0 +1,41 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<div id="formStep1" style="background-color: white">
+    <div class="form-group">
+        <h1 class="display-3 text-center" style="background-color: #CEEFFA; color: #0D706E; font-style: italic"> Thông tin vé bay</h1>
+        <p class="display-6" > Chuyến bay: FL {{ session['maChuyenBay'] }} </p>
+        <p class="display-6" > Hạng ghế: {{ tenHangGhe }} </p>
+        <input class="form-control m-2" type="text" value="Số vé người lớn: {{ session['veNguoiLon'] }}" disabled>
+        <input class="form-control m-2" type="text" value="Số vé trẻ em: {{ session['veTreEm'] }}" disabled>
+        <input class="form-control m-2" type="text" value="Số vé em bé: {{ session['veEmBe'] }}" disabled>
+        <div class="button form-container">
+            <button id="prev" class="btn btn-warning" type="button"> Quay lại</button>
+            <button class="btn btn-success" id="submit"> thanh toán </button>
+            <button id="cancel" class="btn btn-danger" type="button"> Hủy </button>
+        </div>
+    </div>
+</div>
+
+
+<script>
+// Xử lý nút "Quay lại"
+document.getElementById('prev').addEventListener('click', function () {
+    window.history.back(); // Quay lại trang trước
+});
+
+// Xử lý nút "Hủy"
+document.getElementById('cancel').addEventListener('click', function () {
+    window.location.href = '/'; // Quay về trang chủ
+});
+
+document.getElementById('submit').addEventListener('click', submitForm)
+async function submitForm(){
+    const response = await fetch ('/create_payment_link', {
+    method:'post'
+    })
+    const payment = await response.json()
+    window.location.href = payment.checkoutUrl;
+}
+</script>
+{% endblock %}

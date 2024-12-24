@@ -1,0 +1,60 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<div class="container">
+    <form action="{{ url_for('confirm_payment') }}" method="POST">
+        <h2 class="fs-1 my-3">Thanh toán bằng tiền mặt</h2>
+
+        <h4 class="fs-2 mb-3">Tổng số tiền cần thanh toán: {{ total_cost }} VND</h4>
+
+        <h4 class="fs-2 mb-3">Thông tin vé và hành khách:</h4>
+        <ul class="fs-2 mb-3">
+            {% for info in combined_info %}
+            <li>
+                <strong>Vé:</strong> Ghế {{ info.seat.seatNumber }} - {{ info.seat.class }} - {{ info.seat.price }} VND <br>
+                <strong>Hành khách:</strong> <br>
+                Tên: {{ info.passenger.name }} <br>
+                CCCD: {{ info.passenger.cccd }} <br>
+                SĐT: {{ info.passenger.phone }}
+            </li>
+            {% endfor %}
+        </ul>
+
+        <div class="fs-2 mb-3">
+            <label for="amount-paid" class="mb-3">Số tiền khách đưa:</label>
+            <input type="number" id="amount-paid" class="form-control fs-2" placeholder="Nhập số tiền bạn đưa" style="width:40%; height: 35px;"/>
+        </div>
+
+        <div class="fs-2 mb-3">
+            <label for="change">Tiền cần trả lại:</label>
+            <input type="text" id="change" class="form-control fs-2" style="width:40%; height: 35px;" readonly />
+        </div>
+
+        <!-- Thêm các dữ liệu cần thiết cho việc lưu thông tin thanh toán -->
+        <input type="hidden" name="seats-info" value="{{ combined_info }}">
+
+        <button id="confirm-payment" class="btn btn-primary mt-3">Xác nhận thanh toán</button>
+        <button class="btn btn-primary mt-3" onclick="window.location.href='/danhsachchuyenbay';">Huỷ thanh toán</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('amount-paid').addEventListener('input', (e) => {
+        const totalCost = parseInt('{{ total_cost }}'.replace(/[^\d]/g, ''), 10);
+        const amountPaid = parseInt(e.target.value, 10) || 0;
+        const change = amountPaid - totalCost;
+        document.getElementById('change').value = change >= 0 ? change + ' VND' : 'Số tiền không đủ';
+    });
+
+
+    document.getElementById('confirm-payment').addEventListener('click', () => {
+        const change = document.getElementById('change').value;
+        if (change === 'Số tiền không đủ') {
+            alert('Số tiền bạn đưa không đủ.');
+        } else {
+            alert('Thanh toán thành công!');
+            // Lưu thông tin thanh toán vào cơ sở dữ liệu và in vé ở đây
+        }
+    });
+</script>
+{% endblock %}

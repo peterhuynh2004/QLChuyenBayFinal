@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác thực OTP</title>
+</head>
+<body>
+    <form method="post">
+        <h3>Xác thực OTP</h3>
+        {% if err_msg %}
+        <div class="alert alert-danger">{{ err_msg }}</div>
+        {% endif %}
+        <label for="otp">Nhập mã OTP:</label>
+        <input type="text" name="otp" id="otp" required>
+        <button type="submit">Xác nhận</button>
+    </form>
+</body>
+</html>

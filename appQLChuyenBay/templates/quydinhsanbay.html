@@ -1,0 +1,132 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<div>
+    <div id="quy-dinh-san-bay-container" style="font-size:2.4rem;">
+        <h1 style="text-align:center; margin: 10px 0 10px 0; font-size:2.8rem; font-weight:600;">QUY ĐỊNH SÂN BAY</h1>
+        <div>
+            <label>Số lượng sân bay:</label>
+            <span id="SoLuongSanBayDisplay"></span>
+            <input type="number" id="SoLuongSanBayInput" style="display: none;"/>
+        </div>
+        <div>
+            <label>Thời gian bay tối thiểu (phút):</label>
+            <span id="ThoiGianBayToiThieuDisplay"></span>
+            <input type="number" id="ThoiGianBayToiThieuInput" style="display: none;"/>
+        </div>
+        <div>
+            <label>Sân bay trung gian tối đa:</label>
+            <span id="SanBayTrungGianToiDaDisplay"></span>
+            <input type="number" id="SanBayTrungGianToiDaInput" style="display: none;"/>
+        </div>
+        <div>
+            <label>Thời gian dừng tối thiểu (phút):</label>
+            <span id="ThoiGianDungToiThieuDisplay"></span>
+            <input type="number" id="ThoiGianDungToiThieuInput" style="display: none;"/>
+        </div>
+        <div>
+            <label>Thời gian dừng tối đa (phút):</label>
+            <span id="ThoiGianDungToiDaDisplay"></span>
+            <input type="number" id="ThoiGianDungToiDaInput" style="display: none;"/>
+        </div>
+        <button id="edit-button" class="btn btn-outline-primary" onclick="enableEditing()"
+                style="color:black; padding:10px 20px;">Sửa
+        </button>
+        <button id="save-button" class="btn btn-outline-success" onclick="updateQuyDinhSanBay()" style="display: none;"
+                style="color:black; padding:10px 20px;">Xác nhận
+        </button>
+        <button id="cancel-button" class="btn btn-outline-secondary" onclick="cancelEditing()" style="display: none; padding:10px 20px; color:black;">Hủy chỉnh sửa</button>
+    </div>
+</div>
+
+<script>
+    let originalData = {}; // Để lưu trữ dữ liệu gốc
+
+// Hàm tải dữ liệu từ API
+async function fetchQuyDinhSanBay() {
+    const response = await fetch('/api/quydinh/sanbay/1'); // Thay ID bằng giá trị cụ thể
+    const data = await response.json();
+
+    if (response.status === 200) {
+        originalData = data; // Lưu dữ liệu gốc
+        document.getElementById("SoLuongSanBayDisplay").innerText = data.SoLuongSanBay;
+        document.getElementById("ThoiGianBayToiThieuDisplay").innerText = data.ThoiGianBayToiThieu;
+        document.getElementById("SanBayTrungGianToiDaDisplay").innerText = data.SanBayTrungGianToiDa;
+        document.getElementById("ThoiGianDungToiThieuDisplay").innerText = data.ThoiGianDungToiThieu;
+        document.getElementById("ThoiGianDungToiDaDisplay").innerText = data.ThoiGianDungToiDa;
+    } else {
+        alert(data.message || "Không thể tải dữ liệu!");
+    }
+}
+
+// Hàm hủy chỉnh sửa
+function cancelEditing() {
+    // Khôi phục các giá trị hiển thị
+    document.getElementById("SoLuongSanBayDisplay").innerText = originalData.SoLuongSanBay;
+    document.getElementById("ThoiGianBayToiThieuDisplay").innerText = originalData.ThoiGianBayToiThieu;
+    document.getElementById("SanBayTrungGianToiDaDisplay").innerText = originalData.SanBayTrungGianToiDa;
+    document.getElementById("ThoiGianDungToiThieuDisplay").innerText = originalData.ThoiGianDungToiThieu;
+    document.getElementById("ThoiGianDungToiDaDisplay").innerText = originalData.ThoiGianDungToiDa;
+
+    // Hiển thị lại các giá trị và ẩn input
+    document.querySelectorAll("span").forEach(span => span.style.display = "inline");
+    document.querySelectorAll("input").forEach(input => input.style.display = "none");
+
+    // Hiển thị lại nút Sửa và ẩn các nút Xác nhận, Hủy
+    document.getElementById("edit-button").style.display = "inline";
+    document.getElementById("save-button").style.display = "none";
+    document.getElementById("cancel-button").style.display = "none";
+}
+
+
+// Hàm bật chế độ chỉnh sửa
+function enableEditing() {
+    // Hiển thị các ô input
+    document.getElementById("SoLuongSanBayInput").value = originalData.SoLuongSanBay;
+    document.getElementById("ThoiGianBayToiThieuInput").value = originalData.ThoiGianBayToiThieu;
+    document.getElementById("SanBayTrungGianToiDaInput").value = originalData.SanBayTrungGianToiDa;
+    document.getElementById("ThoiGianDungToiThieuInput").value = originalData.ThoiGianDungToiThieu;
+    document.getElementById("ThoiGianDungToiDaInput").value = originalData.ThoiGianDungToiDa;
+
+    // Ẩn các giá trị hiển thị
+    document.querySelectorAll("span").forEach(span => span.style.display = "none");
+    document.querySelectorAll("input").forEach(input => input.style.display = "inline");
+
+    // Ẩn nút Sửa, hiển thị nút Xác nhận và Hủy
+    document.getElementById("edit-button").style.display = "none";
+    document.getElementById("save-button").style.display = "inline";
+    document.getElementById("cancel-button").style.display = "inline";
+}
+
+
+// Hàm cập nhật dữ liệu
+async function updateQuyDinhSanBay() {
+    const data = {
+        SoLuongSanBay: document.getElementById("SoLuongSanBayInput").value,
+        ThoiGianBayToiThieu: document.getElementById("ThoiGianBayToiThieuInput").value,
+        SanBayTrungGianToiDa: document.getElementById("SanBayTrungGianToiDaInput").value,
+        ThoiGianDungToiThieu: document.getElementById("ThoiGianDungToiThieuInput").value,
+        ThoiGianDungToiDa: document.getElementById("ThoiGianDungToiDaInput").value,
+    };
+
+    const response = await fetch('/api/quydinh/sanbay/1', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+    if (response.status === 200) {
+        alert(result.message);
+        location.reload(); // Tải lại trang để cập nhật
+    } else {
+        alert(result.message || "Cập nhật thất bại!");
+    }
+}
+
+// Tải dữ liệu ban đầu
+fetchQuyDinhSanBay();
+
+
+</script>
+{% endblock  %}

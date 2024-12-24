@@ -1,0 +1,96 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<div>
+    <div id="quy-dinh-ve-container" style="font-size:2.4rem;">
+        <h1 style="text-align:center; margin: 10px 0 10px 0; font-size:2.8rem; font-weight:600;">QUY ĐỊNH VÉ</h1>
+        <div>
+            <label>Số lượng hạng ghế 1:</label>
+            <span id="SoLuongHangGhe1Display"></span>
+            <input type="number" id="SoLuongHangGhe1Input" style="display: none;" min="1" />
+        </div>
+        <div>
+            <label style="margin-bottom:10px;">Số lượng hạng ghế 2:</label>
+            <span id="SoLuongHangGhe2Display"></span>
+            <input type="number" id="SoLuongHangGhe2Input" style="display: none;" min="1" />
+        </div>
+        <button id="edit-button" class="btn btn-outline-primary" onclick="enableEditing()"
+                style="color:black; padding:10px 20px;">Sửa
+        </button>
+        <button id="save-button" class="btn btn-outline-success" onclick="updateQuyDinhVe()" style="display: none;"
+                style="color:black; padding:10px 20px;">Xác nhận
+        </button>
+        <button id="cancel-button" class="btn btn-outline-secondary" onclick="cancelEditing()" style="display: none; padding:10px 20px; color:black;">Hủy chỉnh sửa</button>
+    </div>
+</div>
+
+<script>
+    let originalData = {}; // Để lưu trữ dữ liệu gốc
+
+    // Hàm tải dữ liệu từ API
+    async function fetchQuyDinhVe() {
+        const response = await fetch('/api/quydinh/ve/2'); // Thay ID bằng giá trị cụ thể
+        const data = await response.json();
+
+        if (response.status === 200) {
+            originalData = data; // Lưu dữ liệu gốc
+            document.getElementById("SoLuongHangGhe1Display").innerText = data.SoLuongHangGhe1;
+            document.getElementById("SoLuongHangGhe2Display").innerText = data.SoLuongHangGhe2;
+        } else {
+            alert(data.message || "Không thể tải dữ liệu!");
+        }
+    }
+
+    // Hàm hủy chỉnh sửa
+    function cancelEditing() {
+        document.getElementById("SoLuongHangGhe1Display").innerText = originalData.SoLuongHangGhe1;
+        document.getElementById("SoLuongHangGhe2Display").innerText = originalData.SoLuongHangGhe2;
+
+        document.querySelectorAll("span").forEach(span => span.style.display = "inline");
+        document.querySelectorAll("input").forEach(input => input.style.display = "none");
+
+        document.getElementById("edit-button").style.display = "inline";
+        document.getElementById("save-button").style.display = "none";
+        document.getElementById("cancel-button").style.display = "none";
+    }
+
+    // Hàm bật chế độ chỉnh sửa
+    function enableEditing() {
+        document.getElementById("SoLuongHangGhe1Input").value = originalData.SoLuongHangGhe1;
+        document.getElementById("SoLuongHangGhe2Input").value = originalData.SoLuongHangGhe2;
+
+        document.querySelectorAll("span").forEach(span => span.style.display = "none");
+        document.querySelectorAll("input").forEach(input => input.style.display = "inline");
+
+        document.getElementById("edit-button").style.display = "none";
+        document.getElementById("save-button").style.display = "inline";
+        document.getElementById("cancel-button").style.display = "inline";
+    }
+
+    // Hàm cập nhật dữ liệu
+    async function updateQuyDinhVe() {
+        const data = {
+            SoLuongHangGhe1: document.getElementById("SoLuongHangGhe1Input").value,
+            SoLuongHangGhe2: document.getElementById("SoLuongHangGhe2Input").value,
+        };
+
+        const response = await fetch('/api/quydinh/ve/2', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+        if (response.status === 200) {
+            alert(result.message);
+            location.reload();
+        } else {
+            alert(result.message || "Cập nhật thất bại!");
+        }
+    }
+
+    // Tải dữ liệu ban đầu
+    fetchQuyDinhVe();
+
+</script>
+{% endblock %}

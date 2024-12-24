@@ -1,0 +1,69 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<div class="sign">
+    <div id="form-login" class="login-phara">
+        <div class="wrap login">
+            <form class="form-group" action="/login" method="POST">
+                <div>
+                    <div class="title">ĐĂNG NHẬP</div>
+                </div>
+                <div class="input-box">
+                    <input
+                            type="email"
+                            id="mail-log"
+                            class="email-input"
+                            name="email"
+                            placeholder="Nhập địa chỉ email"
+                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                            required
+                    />
+                    <i class="bx bxs-user"></i>
+                    <p class="form-error">
+                        Vui lòng nhập đúng email
+                    </p>
+                </div>
+                <div class="input-box">
+                    <input
+                            type="password"
+                            id="pass-log"
+                            class="pass-input"
+                            name="password"
+                            placeholder="Nhập mật khẩu"
+                            required
+                    />
+                    <i class="bx bxs-lock-alt"></i>
+                </div>
+                <div class="remember-forgot">
+                    <a href="./forgotpsw.php">Quên mật khẩu?</a>
+                </div>
+                <div class="submit">
+                    <button type="submit" class="buttonlogin">
+                        Đăng nhập
+                    </button>
+                </div>
+                <p class="nhap_sai_mk">Đăng nhập thất bại</p>
+            </form>
+            <div class="loginwith">
+                <span>Đăng nhập với</span>
+            </div>
+            <div class="gg">
+                <button class="signup-social logo-wrapper">
+                    <img
+                            src="https://res.cloudinary.com/ddgxultsd/image/upload/v1732841525/aqxv2wun8qmlj5sre6yp.png"
+                            alt="logo GG"
+                    />
+                    <span class="signup-social-text"
+                    >Đăng nhập bằng Google</span
+                    >
+                </button>
+            </div>
+            <div class="register">
+                <p>Tạo tài khoản mới? <a href="/register" id="next">Đăng kí</a></p>
+            </div>
+        </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock  %}

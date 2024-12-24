@@ -1,0 +1,268 @@
+main {
+  font-family: "Lato", sans-serif;
+}
+/*Định dạng ô login */
+.sign {
+  display: flex;
+  min-height: 50px;
+  background-color: white;
+  justify-content: center;
+}
+.wrap {
+  width: 552px;
+  color: #181717;
+  border-radius: 10px;
+  padding-top: 50px;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-bottom: 24px;
+  min-width: 100%;
+  margin: 0 auto;
+}
+
+.sign #form-login {
+  max-width: 600px;
+  overflow: hidden;
+  scroll-behavior: smooth;
+  scroll-snap-type: both;
+}
+
+.login-phara {
+  display: flex;
+  transform: translateX(0%);
+  will-change: transform;
+  transition: all 0.35s ease 0s;
+  scroll-snap-align: start;
+}
+
+#form-login::-webkit-scrollbar {
+  display: none;
+}
+
+/*=====Các thành phần====*/
+.title {
+  font-size: 36px;
+  text-align: center;
+  color: #181717;
+  font-weight: 1000;
+  padding-bottom: 30px;
+}
+.Logo.footer-bottom {
+  display: flex;
+}
+/*ô nhập liệu*/
+.wrap .input-box {
+
+  width: 100%;
+  height: 50px;
+  margin: 30px 0;
+}
+
+.input-box input {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  border: 2px solid #f1f3f5;
+  border-radius: 40px;
+  font-size: 1.6rem;
+  color: #181717;
+  padding: 20px 45px 20px 20px;
+}
+.input-box input::placeholder {
+  color: #181717;
+}
+.input-box i {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+}
+
+/*TP khác*/
+.wrap .remember-forgot {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0px 0 15px;
+}
+.remember-forgot label input {
+  accent-color: #fff;
+  margin-right: 3px;
+}
+.remember-forgot a {
+  color: #181717;
+  text-decoration: none;
+}
+.remember-forgot a:hover {
+  text-decoration: underline;
+}
+.wrap .buttonlogin {
+  width: 40%;
+  height: 45px;
+  background: #181717;
+  border: none;
+  outline: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 20px;
+  color: white;
+  font-weight: 700;
+  padding: 7px 40px;
+}
+.submit {
+  text-align: center;
+}
+.loginwith {
+  text-align: center;
+  font-size: 20px;
+  color: #999;
+  margin: 20px auto;
+  position: relative;
+}
+.loginwith span {
+  padding: 0 9.6px;
+  background-color: #fff;
+  position: relative;
+  z-index: 1;
+}
+.loginwith:after {
+  content: "";
+  width: 100%;
+  height: 1px;
+  background-color: #999;
+  position: absolute;
+  top: 50%;
+  left: 0;
+}
+.wrap .register {
+  font-size: 1.45rem;
+  text-align: center;
+  margin: 20px 0 15px;
+}
+.signup-social {
+  padding: 10px;
+  border-radius: 20px;
+
+  width: 50%;
+  color: #181717;
+  font-size: 1.6rem;
+  font-weight: bold;
+  font-family: "Lato", sans-serif;
+  border: 0;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 5px 10px 0 rgba(76, 111, 244, 0.5);
+}
+
+.signup-social-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 3rem;
+}
+.signup-social-text {
+  display: block;
+  margin: 0 auto;
+}
+.logo-wrapper {
+  background: #fff;
+}
+.logo-wrapper img {
+  width: 30px;
+  border-radius: 20px;
+}
+.gg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.register p a {
+  color: #007aff;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+.register p a:hover {
+  text-decoration: underline;
+}
+
+*::placeholder {
+  color: var(--font-color);
+  font-size: 1.8rem;
+  font-weight: 500;
+}
+
+.form-error,
+.df-pass {
+  color: red;
+  font-size: 1.8rem;
+  font-weight: 400;
+  line-height: 2.8rem;
+  display: none;
+}
+
+.input-box:has(:invalid:not(:placeholder-shown)) + .form-error {
+  display: block !important;
+}
+
+.form-group:has(:invalid) .buttonlogin {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* CSS Password */
+#pass-error {
+  margin-left: 30px;
+  font-size: 1.8rem;
+  font-weight: 500;
+  display: none;
+  position: relative;
+}
+
+#pass-error p {
+  padding: 5px 10px;
+}
+
+/* Thỏa mãn điều kiện là màu xanh */
+.valid {
+  color: green;
+}
+
+.valid:before {
+  position: relative;
+  left: -25px;
+  content: "✔";
+}
+
+/*  Sai thì là màu đỏ */
+.invalid {
+  color: red;
+}
+
+.invalid:before {
+  position: relative;
+  left: -25px;
+  content: "✖";
+}
+
+.nhap_sai_mk {
+  margin-top: 20px;
+  color: red;
+  font-size: 1.8rem;
+  font-weight: 400;
+  line-height: 2.8rem;
+  text-align: center;
+  display: none;
+}
