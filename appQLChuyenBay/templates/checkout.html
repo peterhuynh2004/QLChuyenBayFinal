@@ -6,9 +6,11 @@
         <h1 class="display-3 text-center" style="background-color: #CEEFFA; color: #0D706E; font-style: italic"> Thông tin vé bay</h1>
         <p class="display-6" > Chuyến bay: FL {{ session['maChuyenBay'] }} </p>
         <p class="display-6" > Hạng ghế: {{ tenHangGhe }} </p>
-        <input class="form-control m-2" type="text" value="Số vé người lớn: {{ session['veNguoiLon'] }}" disabled>
-        <input class="form-control m-2" type="text" value="Số vé trẻ em: {{ session['veTreEm'] }}" disabled>
-        <input class="form-control m-2" type="text" value="Số vé em bé: {{ session['veEmBe'] }}" disabled>
+        <input class="form-control m-2" type="text" value="Số vé người lớn: {{ veNguoiLon }}" disabled>
+        <input class="form-control m-2" type="text" value="Số vé trẻ em: {{ veTreEm }}" disabled>
+        <input class="form-control m-2" type="text" value="Số vé em bé: {{ veEmBe }}" disabled>
+        <input class="form-control m-2" type="text" value="Tổng số vé: {{ tongVe }}" disabled>
+        <input class="form-control m-2" type="text" value="Tổng số tiền thanh toán: {{'{:,.0f}'.format(tongTien) }} VNĐ" disabled>
         <div class="button form-container">
             <button id="prev" class="btn btn-warning" type="button"> Quay lại</button>
             <button class="btn btn-success" id="submit"> thanh toán </button>

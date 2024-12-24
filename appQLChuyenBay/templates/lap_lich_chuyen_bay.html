@@ -165,67 +165,8 @@
         form.remove(); // Xoá phần tử đó
         intermediateAirportCount--; // Giảm số lượng sân bay trung gian đã thêm
     }
-    }
+}
 
-    // Lấy giá trị min và max từ Flask vào JavaScript và đảm bảo giá trị là hợp lệ
-    const thoiGianDungToiThieu = {{ thoi_gian_dung_toi_thieu }};
-    const thoiGianDungToiDa = {{ thoi_gian_dung_toi_da }};
-
-    // Hàm để cập nhật min và max cho các sân bay trung gian
-    function updateMinMaxForIntermediateAirports() {
-        // Lấy tất cả các input có id bắt đầu bằng "intermediate-duration"
-        const durations = document.querySelectorAll('input[id^="intermediate-duration-"]');
-
-        durations.forEach(function(input) {
-            // Cập nhật thuộc tính min và max cho mỗi input
-            input.setAttribute('min', thoiGianDungToiThieu);
-            input.setAttribute('max', thoiGianDungToiDa);
-        });
-    }
-
-    // Cập nhật min/max khi trang được tải xong
-    document.addEventListener('DOMContentLoaded', function() {
-        updateMinMaxForIntermediateAirports();
-    });
-
-    // Lấy giá trị ThoiGianBayToiThieu từ Flask và chuyển thành giá trị JavaScript
-    const thoiGianBayToiThieu = {{ thoi_gian_bay_toi_thieu }};
-
-    // Lắng nghe sự kiện khi người dùng rời khỏi trường thời gian bay
-    document.getElementById("flight-duration").addEventListener("blur", function() {
-        const flightDuration = parseInt(this.value);
-
-        // Kiểm tra nếu thời gian bay nhỏ hơn thời gian tối thiểu
-        if (flightDuration < thoiGianBayToiThieu) {
-            alert(`Thời gian bay phải lớn hơn ${thoiGianBayToiThieu} phút.`);
-            this.value = ''; // Xóa giá trị không hợp lệ
-        }
-    });
-
-    const GH1 = {{ GH1 }};
-    const GH2 = {{ GH2 }};
-
-    // Lắng nghe sự kiện khi người dùng rời khỏi trường thời gian bay
-    document.getElementById("first-class-seats").addEventListener("blur", function() {
-        const flightDuration = parseInt(this.value);
-
-        // Kiểm tra nếu thời gian bay nhỏ hơn thời gian tối thiểu
-        if (flightDuration > GH1) {
-            alert(`Số lượng ghế hạng 1 phải nhỏ hơn ${GH1}`);
-            this.value = ''; // Xóa giá trị không hợp lệ
-        }
-    });
-
-    // Lắng nghe sự kiện khi người dùng rời khỏi trường thời gian bay
-    document.getElementById("flight-duration").addEventListener("blur", function() {
-        const flightDuration = parseInt(this.value);
-
-        // Kiểm tra nếu thời gian bay nhỏ hơn thời gian tối thiểu
-        if (flightDuration > GH2) {
-            alert(`Số lượng ghế hạng 2 phải nhỏ hơn ${GH2}`);
-            this.value = ''; // Xóa giá trị không hợp lệ
-        }
-    });
 
 </script>
 

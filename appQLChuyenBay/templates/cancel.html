@@ -1,10 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-  Bạn đã hủy đơn thành công!
-</body>
-</html>
+{% extends 'layout/base.html' %}
+
+{% block content %}
+
+<div id="formStep1" style="background-color: white; width: 60%" >
+   <div class="form-container">
+        <div class="alert alert-success text-center" style="width: 60%; font-size: 20px">
+          <strong>Success!</strong> Bạn đã hủy thành công!
+        </div>
+   </div>
+    <div class="form-container">
+       <button id="goHome" class="btn btn-danger" style="width: 40%">Quay về trang chủ</button>
+   </div>
+</div>
+<script>
+    // Xử lý nút "Hủy"
+    document.getElementById('goHome').addEventListener('click', function () {
+        window.location.href = '/'; // Quay về trang chủ
+    });
+</script>
+{% endblock %}
