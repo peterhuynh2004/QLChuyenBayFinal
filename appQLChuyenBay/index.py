@@ -2,6 +2,8 @@ import json
 import math
 import os
 from datetime import timedelta, datetime
+
+import requests
 from flask import render_template, request, redirect, url_for, jsonify, flash, current_app
 from sqlalchemy import func
 from sqlalchemy.dialects.mssql.information_schema import sequences
@@ -800,6 +802,58 @@ def admin():
 @app.route('/admin/quanly')
 def quanly():
     return  render_template('quanly.html')
+
+@app.route('/quanlynguoidung')
+def user_list():
+    # Lấy danh sách người dùng từ cơ sở dữ liệu
+    users = dao.query_user()
+
+    # Lấy tất cả vai trò của người dùng cùng một lúc
+    user_roles = dao.get_all_roles()  # Trả về danh sách (ID_User, VaiTro)
+
+    # Chuẩn bị dữ liệu vai trò dưới dạng từ điển
+    roles_dict = {}
+    for user_id, role in user_roles:
+        if user_id not in roles_dict:
+            roles_dict[user_id] = []
+        roles_dict[user_id].append(role)
+
+    # Chuẩn bị danh sách kết hợp user, giới tính và vai trò
+    user_data = []
+    for user in users:
+        # Lấy giới tính
+        gender = dao.get_GioiTinh(user.GioiTinh)
+
+        # Lấy vai trò từ từ điển
+        user_roles = roles_dict.get(user.ID_User, [])
+        role1 = user_roles[0] if len(user_roles) > 0 else ''
+        role2 = user_roles[1] if len(user_roles) > 1 else ''
+
+        # Thêm thông tin vào danh sách
+        user_data.append((user, gender, role1, role2))
+    all_roles = dao.get_all_role_names()
+    return render_template('quanlynguoidung.html', user_data=user_data, all_roles=all_roles)
+
+@app.route('/api/vai_tro/<int:id_user>', methods=['GET'])
+def get_roles_by_user(id_user):
+    try:
+        # Truy vấn danh sách vai trò của người dùng dựa trên ID_User
+        roles = dao.get_roles(id_user)
+
+        # Chuyển vai trò từ Enum thành tên vai trò (danh sách)
+        role_names = [dao.get_role_name(role.ID_VaiTro) for role in roles]
+
+        return jsonify({
+            'success': True,
+            'id_user': id_user,
+            'roles': role_names
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'Error retrieving roles.',
+            'error': str(e)
+        }), 500
 
 
 if __name__ == '__main__':

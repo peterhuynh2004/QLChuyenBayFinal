@@ -1,55 +1,119 @@
-{% extends "admin.html" %}
-
-{% block title %}
-Quản Lý Người Dùng
-{% endblock %}
-
-{% block sidebar %}
-{{ super() }}
-<script>
-     // Tìm tất cả các thẻ a trong sidebar và loại bỏ class active
-    document.querySelectorAll('.sidebar a').forEach(link => {
-        link.classList.remove('active');
-    });
-    // Thêm class active vào mục Thống Kê
-    document.querySelector('.sidebar a[href="{{ url_for('quanlynguoidung') }}?id=124"]').classList.add('active');
-</script>
-{% endblock %}
+{% extends 'layout/base.html' %}
 
 {% block content %}
-<h1>Danh Sách Người Dùng</h1>
-<div class="recent_order">
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Họ Tên</th>
-                <th>Email</th>
-                <th>Số Điện Thoại</th>
-                <th>Ngày Sinh</th>
-                <th>Giới Tính</th>
-                <th>Vai Trò</th>
-                <th>Chỉnh sửa vai trò</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for user in users %}
-            <tr>
-                <td>{{ user.ID_User }}</td>
-                <td>{{ user.HoTen }}</td>
-                <td>{{ user.Email }}</td>
-                <td>{{ user.SDT }}</td>
-                <td>{{ user.NgaySinh.strftime('%Y-%m-%d') if user.NgaySinh else 'N/A' }}</td>
-                <td>{{ user.GioiTinh.name }}</td>
-                <td>{{ ', '.join(user_roles[user.ID_User]) }}</td>
-               <td>
-                    <a href="{{ url_for('update_user_roles', user_id=user.ID_User) }}">
-                        <span class="material-symbols-outlined">edit_square</span>
-                    </a>
-</td>
-            </tr>
+<h1 style="font-size: 4.6rem; text-align: center;">Danh sách người dùng</h1>
+
+<!-- Form Thêm người dùng -->
+<div style="margin-bottom: 20px;">
+    <h2 style="font-size: 3rem;">Thêm người dùng</h2>
+
+    <form action="/add_user" method="POST" style="display: flex; flex-wrap: wrap; gap: 20px;">
+        <input type="text" name="HoTen" placeholder="Họ tên" required style="padding: 10px; font-size: 1.6rem;">
+        <input type="email" name="Email" placeholder="Email" required style="padding: 10px; font-size: 1.6rem;">
+        <input type="password" name="MatKhau" placeholder="Nhập mật khẩu" required style="padding: 10px; font-size: 1.6rem;">
+        <input type="number" name="SDT" placeholder="Số điện thoại" required style="padding: 21px; font-size: 1.6rem; width:180px">
+        <select name="GioiTinh" required style="padding: 10px; font-size: 1.6rem;">
+            <option value="" disabled selected>Chọn giới tính</option>
+            <option value="1">Nam</option>
+            <option value="2">Nữ</option>
+        </select>
+
+        <div id="roles-container">
+            <!-- Các vai trò sẽ được thêm vào đây -->
+        </div>
+
+        <select id="role-template" style="display: none; padding: 10px; font-size: 1.6rem;">
+            <option value="" disabled>Chọn vai trò</option>
+            {% for role in all_roles %}
+                <option value="{{ role }}"trò>{{ role }}</option>
             {% endfor %}
-        </tbody>
-    </table>
+        </select>
+
+        <button type="button" id="add-role-btn" style="padding: 10px 20px; font-size: 1.6rem; background-color: #28a745; color: white; border: none; cursor: pointer;">Thêm vai trò</button>
+        <button type="submit" style="padding: 10px 20px; font-size: 1.6rem; background-color: #28a745; color: white; border: none; cursor: pointer;">Thêm người dùng</button>
+    </form>
 </div>
+
+<!-- Bảng danh sách người dùng -->
+<table class="table table-bordered" style="border-collapse: collapse; width: 100%; margin-top: 20px;">
+    <thead>
+        <tr style="font-size: 2.1rem; text-align: center; border: 1px solid black; background-color: #f2f2f2;">
+            <th style="border: 1px solid black;">ID Người Dùng</th>
+            <th style="border: 1px solid black;">Họ Tên</th>
+            <th style="border: 1px solid black;">Email</th>
+            <th style="border: 1px solid black;">Số Điện Thoại</th>
+            <th style="border: 1px solid black;">Giới Tính</th>
+            <th style="border: 1px solid black;">Vai trò 1</th>
+            <th style="border: 1px solid black;">Vai trò 2</th>
+            <th style="border: 1px solid black;">Hành Động</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user, gender, role1, role2 in user_data %}
+        <tr style="font-size: 2.2rem; text-align: center; border: 1px solid black;">
+            <td style="border: 1px solid black;">{{ user.ID_User }}</td>
+            <td style="border: 1px solid black;">{{ user.HoTen }}</td>
+            <td style="border: 1px solid black;">{{ user.Email }}</td>
+            <td style="border: 1px solid black;">{{ user.SDT }}</td>
+            <td style="border: 1px solid black;">{{ gender }}</td>
+             <td style="border: 1px solid black;">{{ role1 }}</td>
+            <td style="border: 1px solid black;">{{ role2 }}</td>
+            <td style="border: 1px solid black;">
+                <!-- Nút Sửa -->
+                <form action="/edit_user/{{ user.ID_User }}" method="GET" style="display: inline-block;">
+                    <button type="submit" style="padding: 5px 10px; font-size: 1.6rem; background-color: #ffc107; color: white; border: none; cursor: pointer;">Sửa</button>
+                </form>
+                <!-- Nút Xóa -->
+                <form action="/delete_user/{{ user.ID_User }}" method="POST" style="display: inline-block;">
+                    <button type="submit" style="padding: 5px 10px; font-size: 1.6rem; background-color: #dc3545; color: white; border: none; cursor: pointer;" onclick="return confirm('Bạn có chắc chắn muốn xoá người dùng này không?');">Xoá</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const addRoleBtn = document.getElementById('add-role-btn');
+    const rolesContainer = document.getElementById('roles-container');
+    const roleTemplate = document.getElementById('role-template');
+    const maxRoles = 2; // Giới hạn số vai trò tối đa
+
+    // Hàm kiểm tra xem giá trị vai trò đã được chọn trước đó chưa
+    function isRoleDuplicate(selectedRole) {
+        const allRoles = document.querySelectorAll('#roles-container select');
+        for (let i = 0; i < allRoles.length; i++) {
+            if (allRoles[i].value === selectedRole && allRoles[i].value !== "") {  // Kiểm tra nếu giá trị trùng
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Hàm để thêm vai trò mới
+    addRoleBtn.addEventListener('click', function() {
+        // Kiểm tra số lượng vai trò hiện có
+        const currentRoles = document.querySelectorAll('#roles-container select').length;
+        if (currentRoles < maxRoles) {
+            // Tạo một bản sao của template select
+            const newRoleSelect = roleTemplate.cloneNode(true);
+            newRoleSelect.style.display = 'block'; // Hiển thị select
+
+            // Thêm sự kiện kiểm tra trùng vai trò khi thay đổi
+            newRoleSelect.addEventListener('change', function() {
+                const selectedRole = newRoleSelect.value;
+
+
+            // Thêm select vào container
+            rolesContainer.appendChild(newRoleSelect);
+        } else {
+            alert('Tối đa chỉ có 2 vai trò');
+        }
+    });
+});
+
+</script>
+
+
 {% endblock %}

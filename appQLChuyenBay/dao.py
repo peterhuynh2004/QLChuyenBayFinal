@@ -11,7 +11,7 @@ from flask_sqlalchemy import pagination
 from sqlalchemy import func
 from sqlalchemy import text
 from models import NguoiDung, SanBay, NguoiDung_VaiTro, UserRole, ChuyenBay, TuyenBay, SBayTrungGian, VeChuyenBay, \
-    ThongTinHanhKhach, QuyDinhSanBay, QuyDinhBanVe, QuyDinhVe
+    ThongTinHanhKhach, QuyDinhSanBay, QuyDinhBanVe, QuyDinhVe, GioiTinh
 from appQLChuyenBay import app, db, mail
 import hashlib
 import cloudinary.uploader
@@ -457,6 +457,16 @@ def save_ChuyenBay(flight_date, flight_duration, first_class_seats, economy_clas
         db.session.commit()  # Lưu chuyến bay vào database
 
         print("Debug: Chuyến bay đã được lưu thành công. ID chuyến bay:", flight.id_ChuyenBay)
+
+        # Cập nhật số lượt bay (soLuotBay) trong bảng TuyenBay
+        route = TuyenBay.query.get(id_TuyenBay)
+        if route:
+            route.soLuotBay += 1  # Tăng số lượt bay lên 1
+            db.session.commit()  # Lưu thay đổi
+            print(f"Debug: Cập nhật số lượt bay cho tuyến bay {id_TuyenBay} thành công.")
+        else:
+            print(f"Warning: Không tìm thấy tuyến bay với ID {id_TuyenBay}.")
+
         return flight
     except Exception as e:
         print("Error: Xảy ra lỗi khi lưu chuyến bay.")
@@ -649,3 +659,48 @@ def get_chuyen_bay():
 def dem_tong_tuyem_bay():
     tuyenbay = session.TuyenBay.query.count()
     return tuyenbay
+
+
+def query_user():
+    users = db.session.query(
+        NguoiDung
+    ).all()
+    return users
+
+
+def get_GioiTinh(gioiTinh):
+    if gioiTinh == GioiTinh.Nam:
+        return 'Nam'
+    if gioiTinh == GioiTinh.Nu:
+        return 'Nữ'
+    return 'Chưa xác lập'
+
+
+def get_roles(id_user):
+    roles = db.session.query(NguoiDung_VaiTro.ID_VaiTro) \
+        .filter(NguoiDung_VaiTro.ID_User == id_user).all()
+    return roles
+
+
+def get_role_name(ID_VaiTro):
+    role_mapping = {
+        UserRole.NhanVien.value: 'Nhân Viên',
+        UserRole.NguoiQuanTri.value: 'Người Quản Trị',
+        UserRole.KhachHang.value: 'Khách Hàng',
+        UserRole.NguoiKiemDuyet.value: 'Người Kiểm Duyệt',
+    }
+    return role_mapping.get(ID_VaiTro, 'Không xác định')
+
+def get_all_roles():
+    # Truy vấn ID_User và VaiTro từ bảng NguoiDung_VaiTro
+    roles = db.session.query(NguoiDung_VaiTro.ID_User, NguoiDung_VaiTro.ID_VaiTro).all()
+
+    # Chuyển giá trị VaiTro thành tên từ enum
+    role_data = [(user_id, UserRole(vai_tro).name) for user_id, vai_tro in roles]
+    return role_data
+
+# Hàm lấy tất cả UserRole và chuyển thành chữ
+def get_all_role_names():
+    # Lấy tất cả giá trị của UserRole và chuyển thành tên
+    role_names = [role.name for role in UserRole]
+    return role_names
