@@ -1,0 +1,55 @@
+{% extends "admin.html" %}
+
+{% block title %}
+Quản Lý Người Dùng
+{% endblock %}
+
+{% block sidebar %}
+{{ super() }}
+<script>
+     // Tìm tất cả các thẻ a trong sidebar và loại bỏ class active
+    document.querySelectorAll('.sidebar a').forEach(link => {
+        link.classList.remove('active');
+    });
+    // Thêm class active vào mục Thống Kê
+    document.querySelector('.sidebar a[href="{{ url_for('quanlynguoidung') }}?id=124"]').classList.add('active');
+</script>
+{% endblock %}
+
+{% block content %}
+<h1>Danh Sách Người Dùng</h1>
+<div class="recent_order">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Họ Tên</th>
+                <th>Email</th>
+                <th>Số Điện Thoại</th>
+                <th>Ngày Sinh</th>
+                <th>Giới Tính</th>
+                <th>Vai Trò</th>
+                <th>Chỉnh sửa vai trò</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.ID_User }}</td>
+                <td>{{ user.HoTen }}</td>
+                <td>{{ user.Email }}</td>
+                <td>{{ user.SDT }}</td>
+                <td>{{ user.NgaySinh.strftime('%Y-%m-%d') if user.NgaySinh else 'N/A' }}</td>
+                <td>{{ user.GioiTinh.name }}</td>
+                <td>{{ ', '.join(user_roles[user.ID_User]) }}</td>
+               <td>
+                    <a href="{{ url_for('update_user_roles', user_id=user.ID_User) }}">
+                        <span class="material-symbols-outlined">edit_square</span>
+                    </a>
+</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

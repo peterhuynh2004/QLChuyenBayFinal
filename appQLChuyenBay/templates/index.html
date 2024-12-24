@@ -1,106 +1,107 @@
-
 {% extends 'layout/base.html' %}
 
 {% block content %}
 <div class='container-holder'>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="colsile">
-                <div class="container-slides" >
-                    <div class="list-images">
-                        <img src="https://images3.alphacoders.com/106/1069102.jpg" width="100%" alt="">
-                        <img src="https://res.cloudinary.com/ddgxultsd/image/upload/v1733425767/lsh60jufkeqra52uogfa.webp"
-                             width="100%" alt="">
-                        <img src="https://res.cloudinary.com/ddgxultsd/image/upload/v1733425767/obnzspi8erszk7xcmjaz.jpg"
-                             width="100%" alt="">
-                        <img src="https://images5.alphacoders.com/112/thumb-1920-1123013.jpg" width="100%" alt="">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="colsile">
+                    <div class="container-slides">
+                        <div class="list-images">
+                            <img src="https://images3.alphacoders.com/106/1069102.jpg" width="100%" alt="">
+                            <img src="https://res.cloudinary.com/ddgxultsd/image/upload/v1733425767/lsh60jufkeqra52uogfa.webp"
+                                 width="100%" alt="">
+                            <img src="https://res.cloudinary.com/ddgxultsd/image/upload/v1733425767/obnzspi8erszk7xcmjaz.jpg"
+                                 width="100%" alt="">
+                            <img src="https://images5.alphacoders.com/112/thumb-1920-1123013.jpg" width="100%" alt="">
+                        </div>
+                        <div class="btnslides">
+                            <div class="btn-left btnslide">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                                    <path d="M12.707 17.293 8.414 13H18v-2H8.414l4.293-4.293-1.414-1.414L4.586 12l6.707 6.707z"></path>
+                                </svg>
+                            </div>
+                            <div class="btn-right btnslide">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                                    <path d="m11.293 17.293 1.414 1.414L19.414 12l-6.707-6.707-1.414 1.414L15.586 11H6v2h9.586z"></path>
+                                </svg>
+                            </div>
+                        </div>
                     </div>
-                    <div class="btnslides">
-                        <div class="btn-left btnslide">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                 style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
-                                <path d="M12.707 17.293 8.414 13H18v-2H8.414l4.293-4.293-1.414-1.414L4.586 12l6.707 6.707z"></path>
-                            </svg>
-                        </div>
-                        <div class="btn-right btnslide">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                 style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
-                                <path d="m11.293 17.293 1.414 1.414L19.414 12l-6.707-6.707-1.414 1.414L15.586 11H6v2h9.586z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-                <div class="homeform">
-                    <div class="form_timkiem">
-                        <div class="tabTK">
-                            <h2 class="tabDatvemaybay">TÌM CHUYẾN BAY
-                                <img class=" " style="margin: 3px 0px 0px 9px;"
-                                     src="https://res.cloudinary.com/ddgxultsd/image/upload/v1733161206/nnkiakakb6tkojne7r53.png"
-                                     width="20" height="21">
-                            </h2>
-                        </div>
-                        <div class="content-main">
-                            <div class="wrap_TK">
-                                <div class="main-container center-block">
-                                    <div class="col-md-">
-                                        <div class="content-flight">
-                                            <form method="get" class="search-form" action="{{ url_for('timkiemchuyenbay') }}">
-                                                <div class="pad3">
-                                                    <div class="row custom-row-gap">
-                                                        <div class="col-sm-3">
-                                                            <div class="diemdi">
-                                                                <div class="block-text">
-                                                                    <p class="block-label zoneX"
-                                                                       style="padding-top: 3px;">Điểm đi</p>
-                                                                    <input required type="text"
-                                                                           class="block-item dropdown-input"
-                                                                           id="SanBayDi"
-                                                                           placeholder="Điểm khởi hành" name="NoiDi">
-                                                                    <ul id="dropdown-results" class="dropdown" value=""></ul>
+                    <div class="homeform">
+                        <div class="form_timkiem">
+                            <div class="tabTK">
+                                <h2 class="tabDatvemaybay">TÌM CHUYẾN BAY
+                                    <img class=" " style="margin: 3px 0px 0px 9px;"
+                                         src="https://res.cloudinary.com/ddgxultsd/image/upload/v1733161206/nnkiakakb6tkojne7r53.png"
+                                         width="20" height="21">
+                                </h2>
+                            </div>
+                            <div class="content-main">
+                                <div class="wrap_TK">
+                                    <div class="main-container center-block">
+                                        <div class="col-md-">
+                                            <div class="content-flight">
+                                                <form method="post" class="search-form" action="/">
+                                                    <div class="pad3">
+                                                        <div class="row custom-row-gap">
+                                                            <div class="col-sm-3">
+                                                                <div class="diemdi">
+                                                                    <div class="block-text">
+                                                                        <p class="block-label zoneX"
+                                                                           style="padding-top: 3px;">Điểm đi</p>
+                                                                        <input required type="text"
+                                                                               class="block-item dropdown-input"
+                                                                               id="SanBayDi"
+                                                                               placeholder="Điểm khởi hành" value="">
+                                                                        <ul id="dropdown-results" class="dropdown"></ul>
+                                                                    </div>
+                                                                </div>
+                                                                <i class="icon-formsearch-switch" id="btn-switch">
+                                                                    <img src="https://res.cloudinary.com/ddgxultsd/image/upload/v1733214317/wgodo3ofwhi2zq65bxml.png"
+                                                                         style="height: 24px; float: right;">
+                                                                </i>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <div class="diemden" style="float: left; width: 226px;">
+                                                                    <div class="block-text">
+                                                                        <p class="block-label zoneX"
+                                                                           style="padding-top: 3px;">Điểm đến</p>
+                                                                        <input required type="text" class="block-item"
+                                                                               id="SanBayDen" placeholder="Điểm đến">
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="col-sm-3">
-                                                            <div class="diemden" style="float: left; width: 226px;">
-                                                                <div class="block-text">
-                                                                    <p class="block-label zoneX"
-                                                                       style="padding-top: 3px;">Điểm đến</p>
-                                                                    <input required type="text"
-                                                                           class="block-item dropdown-input"
-                                                                           id="SanBayDen"
-                                                                           placeholder="Điểm đến" value="" name="NoiDen" >
-                                                                    <ul id="dropdown-results-den" class="dropdown"></ul>
+                                                            <div class="col-sm-3">
+                                                                <div class="col-xs-6xx"
+                                                                     style="float: left; width: 225px; ">
+                                                                    <div class="block-text">
+                                                                        <p class="block-label zoneX"
+                                                                           style="padding-top: 3px;">Ngày đi</p>
+                                                                        <input required type="date"
+                                                                               class="block-item  hasDatepicker"
+                                                                               id="ThoiGian" name="Date"
+                                                                               placeholder="Ngày đi">
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="col-sm-3">
-                                                            <div class="col-xs-6xx"
-                                                                 style="float: left; width: 225px; ">
-                                                                <div class="block-text">
-                                                                    <p class="block-label zoneX"
-                                                                       style="padding-top: 3px;">Ngày đi</p>
-                                                                    <input required type="date"
-                                                                           class="block-item  hasDatepicker"
-                                                                           id="ThoiGian" name="Date"
-                                                                           placeholder="Ngày đi">
-                                                                </div>
+                                                            <div class="col-sm-3">
                                                             </div>
-                                                        </div>
-                                                        <div class="col-sm-3">
-                                                        </div>
-                                                        <div class="col-sm-3">
-                                                            <div class="col-xs-6xx"
-                                                                 style="float: left; width: 225px; ">
-                                                                <div class="block-text">
-                                                                    <p class="block-label zoneX"
-                                                                       style="padding-top: 3px;">Người lớn</p>
-                                                                    <span style="position: absolute; font-weight: normal; font-size: 13px; left: 35px; top: 35px;">&gt;=12 tuổi</span>
-                                                                    <svg xml:space="preserve"
-                                                                         xmlns:xlink="http://www.w3.org/1999/xlink"
-                                                                         style="height: 28px; position: absolute; color: white; top: 30px; left: 14px;"
-                                                                         version="1.1" viewBox="0 0 100 296.5"
-                                                                         x="0px" xmlns="http://www.w3.org/2000/svg"
-                                                                         y="0px">
+                                                            <div class="col-sm-3">
+                                                                <div class="col-xs-6xx"
+                                                                     style="float: left; width: 225px; ">
+                                                                    <div class="block-text">
+                                                                        <p class="block-label zoneX"
+                                                                           style="padding-top: 3px;">Người lớn</p>
+                                                                        <span style="position: absolute; font-weight: normal; font-size: 13px; left: 35px; top: 35px;">&gt;=12 tuổi</span>
+                                                                        <svg xml:space="preserve"
+                                                                             xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                                             style="height: 28px; position: absolute; color: white; top: 30px; left: 14px;"
+                                                                             version="1.1" viewBox="0 0 100 296.5"
+                                                                             x="0px" xmlns="http://www.w3.org/2000/svg"
+                                                                             y="0px">
                                                                            <g fill="#333">
                                                                               <path d="M9.1,146.4c4.4-0.3,7.8-4,7.5-8.5c-0.4-6.6-0.6-12.7-0.6-18.2c0-24.2,3.5-37.8,7-44.9v150c0,6.8,5.5,12.4,12.4,12.4
                                                                                  c6.8,0,12.4-5.5,12.4-12.4v-90.3h4.6v90.3c0,6.8,5.5,12.4,12.4,12.4c6.8,0,12.4-5.5,12.4-12.4v-150c0.6,1.2,1.2,2.6,1.8,4.2
@@ -112,28 +113,28 @@
                                                                                        r="22.5"></circle>
                                                                            </g>
                                                                         </svg>
-                                                                    <input required type="text"
-                                                                           class="block-item SLNguoiLon"
-                                                                           id="SLNguoiLon" name="SLNguoiLon"
-                                                                           value="1" title="Người lớn">
-                                                                    <span class="signa plus">+</span>
-                                                                    <span class="signa minus">-</span>
+                                                                        <input required type="text"
+                                                                               class="block-item SLNguoiLon"
+                                                                               id="SLNguoiLon" name="SLNguoiLon"
+                                                                               value="1" title="Người lớn">
+                                                                        <span class="signa plus">+</span>
+                                                                        <span class="signa minus">-</span>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="col-sm-3">
-                                                            <div class="col-xs-6xx"
-                                                                 style="float: left; width: 225px; ">
-                                                                <div class="block-text">
-                                                                    <p class="block-label zoneX"
-                                                                       style="padding-top: 3px;">Trẻ em</p>
-                                                                    <span style="position: absolute; font-weight: normal; font-size: 13px; left: 35px; top: 35px;"><12 tuổi</span>
-                                                                    <svg xml:space="preserve"
-                                                                         xmlns:xlink="http://www.w3.org/1999/xlink"
-                                                                         style="height: 28px; position: absolute; color: white; top: 30px; left: 14px;"
-                                                                         version="1.1" viewBox="0 0 100 296.5"
-                                                                         x="0px" xmlns="http://www.w3.org/2000/svg"
-                                                                         y="0px">
+                                                            <div class="col-sm-3">
+                                                                <div class="col-xs-6xx"
+                                                                     style="float: left; width: 225px; ">
+                                                                    <div class="block-text">
+                                                                        <p class="block-label zoneX"
+                                                                           style="padding-top: 3px;">Trẻ em</p>
+                                                                        <span style="position: absolute; font-weight: normal; font-size: 13px; left: 35px; top: 35px;"><12 tuổi</span>
+                                                                        <svg xml:space="preserve"
+                                                                             xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                                             style="height: 28px; position: absolute; color: white; top: 30px; left: 14px;"
+                                                                             version="1.1" viewBox="0 0 100 296.5"
+                                                                             x="0px" xmlns="http://www.w3.org/2000/svg"
+                                                                             y="0px">
                                                                            <g fill="#333">
                                                                               <path d="M9.1,146.4c4.4-0.3,7.8-4,7.5-8.5c-0.4-6.6-0.6-12.7-0.6-18.2c0-24.2,3.5-37.8,7-44.9v150c0,6.8,5.5,12.4,12.4,12.4
                                                                                  c6.8,0,12.4-5.5,12.4-12.4v-90.3h4.6v90.3c0,6.8,5.5,12.4,12.4,12.4c6.8,0,12.4-5.5,12.4-12.4v-150c0.6,1.2,1.2,2.6,1.8,4.2
@@ -145,28 +146,28 @@
                                                                                        r="22.5"></circle>
                                                                            </g>
                                                                         </svg>
-                                                                    <input required type="text"
-                                                                           class="block-item SLNguoiLon"
-                                                                           id="SLTreEm" name="SLTreEm" value="0"
-                                                                           title="Trẻ em">
-                                                                    <span class="signa plus">+</span>
-                                                                    <span class="signa minus">-</span>
+                                                                        <input required type="text"
+                                                                               class="block-item SLNguoiLon"
+                                                                               id="SLTreEm" name="SLTreEm" value="1"
+                                                                               title="Trẻ em">
+                                                                        <span class="signa plus">+</span>
+                                                                        <span class="signa minus">-</span>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="col-sm-3">
-                                                            <div class="col-xs-6xx"
-                                                                 style="float: left; width: 225px; ">
-                                                                <div class="block-text">
-                                                                    <p class="block-label zoneX"
-                                                                       style="padding-top: 3px;">Em bé</p>
-                                                                    <span style="position: absolute; font-weight: normal; font-size: 13px; left: 35px; top: 35px;"><24 tháng</span>
-                                                                    <svg xml:space="preserve"
-                                                                         xmlns:xlink="http://www.w3.org/1999/xlink"
-                                                                         style="height: 28px; position: absolute; color: white; top: 30px; left: 14px;"
-                                                                         version="1.1" viewBox="0 0 100 296.5"
-                                                                         x="0px" xmlns="http://www.w3.org/2000/svg"
-                                                                         y="0px">
+                                                            <div class="col-sm-3">
+                                                                <div class="col-xs-6xx"
+                                                                     style="float: left; width: 225px; ">
+                                                                    <div class="block-text">
+                                                                        <p class="block-label zoneX"
+                                                                           style="padding-top: 3px;">Em bé</p>
+                                                                        <span style="position: absolute; font-weight: normal; font-size: 13px; left: 35px; top: 35px;"><24 tháng</span>
+                                                                        <svg xml:space="preserve"
+                                                                             xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                                             style="height: 28px; position: absolute; color: white; top: 30px; left: 14px;"
+                                                                             version="1.1" viewBox="0 0 100 296.5"
+                                                                             x="0px" xmlns="http://www.w3.org/2000/svg"
+                                                                             y="0px">
                                                                            <g fill="#333">
                                                                               <path d="M9.1,146.4c4.4-0.3,7.8-4,7.5-8.5c-0.4-6.6-0.6-12.7-0.6-18.2c0-24.2,3.5-37.8,7-44.9v150c0,6.8,5.5,12.4,12.4,12.4
                                                                                  c6.8,0,12.4-5.5,12.4-12.4v-90.3h4.6v90.3c0,6.8,5.5,12.4,12.4,12.4c6.8,0,12.4-5.5,12.4-12.4v-150c0.6,1.2,1.2,2.6,1.8,4.2
@@ -178,25 +179,26 @@
                                                                                        r="22.5"></circle>
                                                                            </g>
                                                                         </svg>
-                                                                    <input required type="text"
-                                                                           class="block-item SLNguoiLon" id="SLEmBe"
-                                                                           name="SLEmBe" value="0" title="Em bé">
-                                                                    <span class="signa plus">+</span>
-                                                                    <span class="signa minus">-</span>
+                                                                        <input required type="text"
+                                                                               class="block-item SLNguoiLon" id="SLEmBe"
+                                                                               name="SLEmBe" value="1" title="Em bé">
+                                                                        <span class="signa plus">+</span>
+                                                                        <span class="signa minus">-</span>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="col-sm-3">
-                                                            <button id="btnSearchForFlights" class="png-bg"
-                                                                    type="submit">
-                                                                Tìm chuyến bay
-                                                            </button>
+                                                            <div class="col-sm-3">
+                                                                <button id="btnSearchForFlights" class="png-bg"
+                                                                        type="submit">
+                                                                    Tìm chuyến bay
+                                                                </button>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </form>
-                                        </div>
+                                                </form>
+                                            </div>
 
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -212,26 +214,15 @@
                 <div class="giauudai">
                     <div class="titlegiauudai">Các chuyến bay chuẩn bị cất cánh</div>
                     <div class="key row">
-                        <span class="col-sm-4 dest">Hành trình*</span>
-                        <span class="col-sm-2 price">Giá từ*</span>
-                        <span class="col-sm-3 period">Thời gian bay*</span>
-                        <span class="col-sm-1 datngay"></span>
+                         <span class="col-sm-4 dest">Hành trình*</span>
+                         <span class="col-sm-2 price">Giá từ*</span>
+                         <span class="col-sm-3 period">Thời gian bay*</span>
+                         <span class="col-sm-1 datngay"></span>
                     </div>
-                    {% for flight in flights %}
-                    <div class="key row">
-                        <span class="col-sm-4 dest">{{ flight.hành_trình }}</span>
-                        <span class="col-sm-2 price">VND</span>
-                        <span class="col-sm-3 period">{{ flight.thời_gian }}</span>
-                        <span class="col-sm-1 datngay">
-                            <button type="button" class="btn btn-danger">Đặt ngay</button>
-                        </span>
-                    </div>
-                    {% endfor %}
                 </div>
             </div>
             <div class="col-sm-6"></div>
         </div>
     </div>
 </div>
-
 {% endblock %}

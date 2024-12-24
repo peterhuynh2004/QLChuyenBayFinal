@@ -4,18 +4,19 @@ from urllib.parse import quote
 from flask_login import LoginManager, current_user
 import cloudinary
 from flask_mail import Mail, Message
-from flask_admin import Admin
 from datetime import timedelta
+
 
 app = Flask(__name__)
 app.secret_key = 'ạkdgasfu324234afssdffdsg'
 
 app.secret_key = 'HGHJAHA^&^&*AJAVAHJ*^&^&*%&*^GAFGFAG'
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:@localhost:3306/qlchuyenbay?charset=utf8mb4"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:%s@localhost/qlchuyenbay?charset=utf8mb4" % quote(
+    'Leviethaiquan2206@')
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 app.config["PAGE_SIZE"] = 8
 
-db = SQLAlchemy(app)
+db = SQLAlchemy(app=app)
 
 login = LoginManager(app)
 
@@ -40,4 +41,3 @@ app.config['MAIL_DEFAULT_SENDER'] = 'your-email@gmail.com'
 # Khởi tạo Flask-Mail
 mail = Mail(app)
 
-admin = Admin(app=app, name='QUẢN TRỊ QUẢN LÝ CHUYẾN BAY', template_mode='bootstrap4')

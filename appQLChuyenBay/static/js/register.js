@@ -3,7 +3,7 @@ const myInput = document.getElementById("psw");
 const letter = document.getElementById("letter");
 const capital = document.getElementById("capital");
 const number = document.getElementById("number");
-const lengthRequirement = document.getElementById("length");
+const length = document.getElementById("length");
 
 // When the user clicks on the password field, show the message box
 myInput.onfocus = function () {
@@ -35,8 +35,8 @@ function validatePasswordComplexity() {
     capital.classList.toggle("invalid", !hasUpperCase);
     number.classList.toggle("valid", hasNumbers);
     number.classList.toggle("invalid", !hasNumbers);
-    lengthRequirement.classList.toggle("valid", hasMinimumLength);
-    lengthRequirement.classList.toggle("invalid", !hasMinimumLength);
+    length.classList.toggle("valid", hasMinimumLength);
+    length.classList.toggle("invalid", !hasMinimumLength);
 }
 
 document.querySelector(".alert").classList.add("show");

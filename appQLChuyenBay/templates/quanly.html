@@ -1,0 +1,102 @@
+{% extends "admin.html" %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/quanlychuyenbay.css') }}">
+{% endblock %}
+
+{% block title %}
+Quản Lý Người Dùng
+{% endblock %}
+
+{% block sidebar %}
+{{ super() }}
+<script>
+     // Tìm tất cả các thẻ a trong sidebar và loại bỏ class active
+    document.querySelectorAll('.sidebar a').forEach(link => {
+        link.classList.remove('active');
+    });
+    // Thêm class active vào mục Thống Kê
+    document.querySelector('.sidebar a[href="{{ url_for('quanly') }}?id=125"]').classList.add('active');
+</script>
+{% endblock %}
+
+{% block content %}
+<h1>Quản Lý Chuyến Bay</h1>
+<div class="quanly_container">
+        <div class="form-section">
+            <div class="form-group">
+                <label for="hang-may-bay">Hãng máy bay (*)</label>
+                <select id="hang-may-bay">
+                    <option>Chọn hãng máy bay</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="diem-di">Điểm đi (*)</label>
+                <select id="diem-di">
+                    <option>Chọn điểm đi</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="san-bay-di">Sân bay đi (*)</label>
+                <select id="san-bay-di">
+                    <option>Chọn sân bay đi</option>
+                </select>
+            </div>
+            <div class="form-group date-input">
+                <label for="thoi-gian-di">Thời gian đi (*)</label>
+                <input type="text" id="thoi-gian-di" placeholder="dd/mm/yyyy --:--">
+            </div>
+            <div class="form-group">
+                <label for="loai-ve">Loại vé (*)</label>
+                <select id="loai-ve">
+                    <option>Một chiều</option>
+                    <option>Khứ hồi</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-section">
+            <div class="form-group">
+                <label for="ma-chuyen-bay">Mã chuyến bay (*)</label>
+                <input type="text" id="ma-chuyen-bay" placeholder="Mã chuyến bay">
+            </div>
+            <div class="form-group">
+                <label for="diem-den">Điểm đến (*)</label>
+                <select id="diem-den">
+                    <option>Chọn điểm đến</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="san-bay-den">Sân bay đến (*)</label>
+                <select id="san-bay-den">
+                    <option>Chọn sân bay đến</option>
+                </select>
+            </div>
+            <div class="form-group date-input">
+                <label for="thoi-gian-den">Thời gian đến (*)</label>
+                <input type="text" id="thoi-gian-den" placeholder="dd/mm/yyyy --:--">
+            </div>
+        </div>
+        <div class="form-section">
+            <div class="form-group">
+                <label for="gia-ve-thuong">Giá vé thường (*)</label>
+                <input type="text" id="gia-ve-thuong" placeholder="Giá ghế thường">
+            </div>
+            <div class="form-group">
+                <label for="gia-ve-vip">Giá vé VIP (*)</label>
+                <input type="text" id="gia-ve-vip" placeholder="Giá ghế VIP">
+            </div>
+            <div class="form-group">
+                <label for="trang-thai">Trạng thái (*)</label>
+                <select id="trang-thai">
+                    <option>Chọn trạng thái</option>
+                </select>
+            </div>
+            <div class="button-group">
+                <button class="btn-light">Quay lại</button>
+                <button class="btn-blue">Lưu dữ liệu</button>
+                <button class="btn-red">Xuất bản</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}

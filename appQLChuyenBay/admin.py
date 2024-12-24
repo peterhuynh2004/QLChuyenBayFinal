@@ -1,2 +1,0 @@
-from appQLChuyenBay import admin
-

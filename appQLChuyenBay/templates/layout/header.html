@@ -2,7 +2,12 @@
     <div class="content nav-content">
         <nav class="navbar">
 
-
+            <input
+                    type="checkbox"
+                    id="nav-mobile-input"
+                    class="nav-input"
+                    value=""
+            />
 
             <!-- Logo -->
             <div class="Logo-nav">
@@ -43,15 +48,15 @@
             <div class="actions">
 
                 {% if current_user.is_authenticated %}
-                    <li class="nav-item dropdown btn">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            {{ current_user.HoTen }}
-                        </a>
-                        <ul class="dropdown-menu dropmn">
-                                <li id="change-info-btn"><a class="dropdown-item" href="/chuc_nang">Chức năng</a></li>
-                            <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
-                        </ul>
-                    </li>
+                <li class="nav-item dropdown btn">
+                    <a class="nav-link dropdown-toggle" href="#" role="button"
+                       data-bs-toggle="dropdown">{{ current_user.HoTen }}</a>
+                    <ul class="dropdown-menu dropmn">
+                        <li><a class="dropdown-item" href="/TRUNGTAMTIENGANH/verify_password.php">Thay đổi thông tin</a>
+                        </li>
+                        <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
+                    </ul>
+                </li>
                 {% else %}
                 <a href="/register" class="pro btn">
                     <path
