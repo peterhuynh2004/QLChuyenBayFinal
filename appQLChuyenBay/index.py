@@ -14,10 +14,10 @@ from flask import session
 
 from flask_login import login_user, logout_user, current_user
 
-from dotenv import load_dotenv
-
-
-load_dotenv()
+# from dotenv import load_dotenv
+#
+#
+# load_dotenv()
 
 client_id = "acd90926-de08-4e7f-bb5d-1c5b2ba7997d"
 api_key = "e533c9d0-6d93-4986-8699-fedd9947c51a"
