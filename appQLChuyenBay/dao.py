@@ -618,3 +618,34 @@ def save_customer_info(hoTen, cccd, sdt, id_user):
 def get_quy_dinh_ve():
     quy_dinh_ve = db.session.query(QuyDinhVe).filter(QuyDinhVe.ID_QuyDinh == 2).first()
     return quy_dinh_ve
+
+def update_user_roles(user_id, new_roles):
+    Session = sessionmaker(bind=db.engine)
+    session = Session()
+    try:
+        # Xóa vai trò hiện tại
+        existing_roles = session.query(NguoiDung_VaiTro).filter_by(ID_User=user_id).all()
+        for role in existing_roles:
+            session.delete(role)
+
+        # Thêm vai trò mới
+        for role in new_roles:
+            new_role = NguoiDung_VaiTro(ID_User=user_id, ID_VaiTro=UserRole[role])
+            session.add(new_role)
+
+        session.commit()
+    except Exception as e:
+        session.rollback()
+        raise e
+    finally:
+        session.close()
+
+
+def get_chuyen_bay():
+    chuyenbay = session.ChuyenBay.query.all()
+    return chuyenbay
+
+
+def dem_tong_tuyem_bay():
+    tuyenbay = session.TuyenBay.query.count()
+    return tuyenbay

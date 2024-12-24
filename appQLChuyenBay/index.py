@@ -3,6 +3,7 @@ import math
 import os
 from datetime import timedelta, datetime
 from flask import render_template, request, redirect, url_for, jsonify, flash, current_app
+from sqlalchemy import func
 from sqlalchemy.dialects.mssql.information_schema import sequences
 from sqlalchemy.testing.plugin.plugin_base import post_begin
 from payos import PaymentData, ItemData, PayOS
@@ -758,6 +759,47 @@ def success():
     return render_template("success.html", order_code=order_code)
 
 
+
+@app.route('/admin/')
+def admin():
+    tuyenbays = dao.get_san_bay()
+    chuyenbays = dao.get_chuyen_bay()
+
+
+    # Tính tổng doanh thu và tổng số chuyến bay
+    total_revenue = sum(ty.doanhThu for ty in tuyenbays)
+    total_flights = sum(ty.soLuotBay for ty in tuyenbays)
+
+    # Tính tổng số ghế và số ghế đã đặt
+    total_seats = sum(cb.GH1 + cb.GH2 for cb in chuyenbays)
+    occupied_seats = sum(cb.GH1_DD + cb.GH2_DD for cb in chuyenbays)
+
+    # Tính tổng giờ bay
+    total_hours = sum((cb.tG_Bay - cb.gio_Bay).total_seconds() / 3600 for cb in chuyenbays)
+
+    # Tính tỷ lệ ghế đã đặt
+    if total_seats > 0:
+        avg_occupancy_rate = round((occupied_seats / total_seats * 100), 2)
+        #Hàm round dùng để hiển thị 2 số thập phân và được làm tròn 1 cách phù hợp
+    else:
+        avg_occupancy_rate = 0
+
+    # Tính tỷ lệ trung bình thời gian bay (giả sử tất cả các chuyến bay đều cất cánh)
+    if total_flights > 0:
+        avg_flight_duration = total_hours / total_flights
+    else:
+        avg_flight_duration = 0
+
+    # Tỷ lệ chuyến bay cất cánh thành công (mặc định  100%)
+    success_rate = 100
+    return render_template('admin.html', total_revenue=total_revenue, total_flights=total_flights,
+                           avg_occupancy_rate=avg_occupancy_rate, avg_flight_duration=avg_flight_duration,
+                           success_rate=success_rate, total_hours=total_hours)
+
+
+@app.route('/admin/quanly')
+def quanly():
+    return  render_template('quanly.html')
 
 
 if __name__ == '__main__':
