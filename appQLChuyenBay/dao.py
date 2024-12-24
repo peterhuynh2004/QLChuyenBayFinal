@@ -10,8 +10,10 @@ from flask import session, current_app, jsonify
 from flask_sqlalchemy import pagination
 from sqlalchemy import func
 from sqlalchemy import text
+
 from models import NguoiDung, SanBay, NguoiDung_VaiTro, UserRole, ChuyenBay, TuyenBay, SBayTrungGian, VeChuyenBay, \
-    ThongTinHanhKhach, QuyDinhSanBay, QuyDinhBanVe, QuyDinhVe, GioiTinh
+    ThongTinHanhKhach, QuyDinhSanBay, QuyDinhBanVe, QuyDinhVe, GioiTinh, BangGiaVe
+
 from appQLChuyenBay import app, db, mail
 import hashlib
 import cloudinary.uploader
@@ -704,3 +706,12 @@ def get_all_role_names():
     # Lấy tất cả giá trị của UserRole và chuyển thành tên
     role_names = [role.name for role in UserRole]
     return role_names
+
+def get_GiaVeByByIDSanBay(sanBayDi = None, sanBayDen=None, loaiGhe=None):
+    query = BangGiaVe.query.with_entities(BangGiaVe.Gia_Ve)
+    if sanBayDi and sanBayDen and loaiGhe:
+        query = query.filter(BangGiaVe.ID_SanBayDi == sanBayDi ,
+                             BangGiaVe.ID_SanBayDen == sanBayDen,
+                             BangGiaVe.LoaiHangGhe.__eq__(loaiGhe))
+    return query.first()[0]
+

@@ -1,59 +1,63 @@
- {% extends 'layout/base.html' %}
+{% extends 'layout/base.html' %}
 
 {% block content %}
 <div id="formStep1" style="background-color: white">
     <div class="form-group">
-         <table class="table table-hover table-striped" style="text-align: center; font-size: 18px">
-            <thead >
-              <tr>
+        <table class="table table-hover table-striped" style="text-align: center; font-size: 18px">
+            <thead>
+            <tr>
                 <th>Họ và tên</th>
+                <th>loại vé</th>
                 <th>Số điện thoại</th>
                 <th>Số CCCD</th>
                 <th>Ngày sinh</th>
                 <th>Email</th>
-              </tr>
+            </tr>
             </thead>
             <tbody>
+                {% for khach in hanhKhach %}
+                <tr>
+                    <td>{{ khach.fullName }}</td>
+                    <td> {{ khach.loaiVe }}</td>
+                    <td>{{ khach.phone }}</td>
+                    <td>{{ khach.cccd }}</td>
+                    <td>{{ khach.ngaySinh }}</td>
+                    <td>{{ khach.email }}</td>
+                </tr>
+                {% endfor %}
 
-            {% for khach in hanhKhach %}
-              <tr>
-                <td>{{ khach.fullName }}</td>
-                <td>{{ khach.phone }}</td>
-                <td>{{ khach.cccd }}</td>
-                <td>{{ khach.ngaySinh }}</td>
-                <td>{{ khach.email }}</td>
-              </tr>
-            {% endfor %}
-            {% if treEm %}
-            {% for khach in treEm %}
-              <tr>
-                <td>{{ khach.fullName }}</td>
-                <td></td>
-                <td></td>
-                <td>{{ khach.ngaySinh }}</td>
-                <td></td>
-              </tr>
-            {% endfor %}
-            {% endif %}
-            {% if emBe %}
-            {% for khach in emBe %}
-              <tr>
-                <td>{{ khach.fullName }}</td>
-                <td></td>
-                <td></td>
-                <td>{{ khach.ngaySinh }}</td>
-                <td></td>
-              </tr>
-            {% endfor %}
-            {% endif %}
+                {% if veTreEm > 0 %}
+                {% for khach in treEm %}
+                <tr>
+                    <td>{{ khach.fullName }}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>{{ khach.ngaySinh }}</td>
+                    <td></td>
+                </tr>
+                {% endfor %}
+                {% endif %}
+                {% if emBe %}
+                {% for khach in emBe %}
+                <tr>
+                    <td>{{ khach.fullName }}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>{{ khach.ngaySinh }}</td>
+                    <td></td>
+                </tr>
+                {% endfor %}
+                {% endif %}
             </tbody>
-          </table>
+        </table>
     </div>
-    <form action="{{ url_for('thanhtoanonline') }}" method="post" >
+    <form action="{{ url_for('thanhtoanonline') }}" method="post">
         <div class="button form-container">
             <button id="prev" class="btn btn-warning" type="button"> Quay lại</button>
-            <button id="DatVe" class="btn btn-success" type="submit"> Đặt vé </button>
-            <button id="cancel" class="btn btn-danger" type="button"> Hủy </button>
+            <button id="DatVe" class="btn btn-success" type="submit"> Đặt vé</button>
+            <button id="cancel" class="btn btn-danger" type="button"> Hủy</button>
         </div>
     </form>
 </div>
@@ -75,7 +79,7 @@
     }
 </style>
 
- <script>
+<script>
     // Xử lý nút "Quay lại"
     document.getElementById('prev').addEventListener('click', function () {
         window.history.back(); // Quay lại trang trước
