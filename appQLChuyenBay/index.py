@@ -16,9 +16,9 @@ from flask import session
 
 from flask_login import login_user, logout_user, current_user
 
-from dotenv import load_dotenv
-
-load_dotenv()
+# from dotenv import load_dotenv
+#
+# load_dotenv()
 
 client_id = "acd90926-de08-4e7f-bb5d-1c5b2ba7997d"
 api_key = "e533c9d0-6d93-4986-8699-fedd9947c51a"
@@ -826,8 +826,29 @@ def admin():
 def quanly():
     return  render_template('quanly.html')
 
-@app.route('/quanlynguoidung')
+@app.route('/quanlynguoidung', methods=['GET', 'POST'])
 def user_list():
+    if request.method == 'POST':
+        # Lấy dữ liệu từ form
+        hoten = request.form.get('HoTen')
+        email = request.form.get('Email')
+        matkhau = request.form.get('MatKhau')
+        sdt = request.form.get('SDT')
+        gioitinh = request.form.get('GioiTinh')
+        # Lấy danh sách vai trò
+        roles = request.form.getlist('roles[]')  # Lấy danh sách các giá trị
+        print("Danh sách vai trò:", roles)
+
+        # Kiểm tra email đã tồn tại
+        if dao.check_email_exists2(email):  # Phương thức này kiểm tra xem email có tồn tại không
+            error_message = 'Email đã tồn tại. Vui lòng nhập email khác.'
+        else:
+            # Nếu email không tồn tại, thêm người dùng mới
+            new_user_id = dao.add_user2(hoten, email, matkhau, sdt, gioitinh)
+            # Gán vai trò cho người dùng
+            for role in roles:
+                dao.assign_role_to_user(new_user_id, role)
+            flash('Thêm người dùng thành công!', 'success')
     # Lấy danh sách người dùng từ cơ sở dữ liệu
     users = dao.query_user()
 
@@ -877,7 +898,6 @@ def get_roles_by_user(id_user):
             'message': 'Error retrieving roles.',
             'error': str(e)
         }), 500
-
 
 if __name__ == '__main__':
     with app.app_context():

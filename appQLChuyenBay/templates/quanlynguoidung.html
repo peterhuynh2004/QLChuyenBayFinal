@@ -7,7 +7,7 @@
 <div style="margin-bottom: 20px;">
     <h2 style="font-size: 3rem;">Thêm người dùng</h2>
 
-    <form action="/add_user" method="POST" style="display: flex; flex-wrap: wrap; gap: 20px;">
+    <form action="/quanlynguoidung" method="POST" style="display: flex; flex-wrap: wrap; gap: 20px;" id="add-user-form">
         <input type="text" name="HoTen" placeholder="Họ tên" required style="padding: 10px; font-size: 1.6rem;">
         <input type="email" name="Email" placeholder="Email" required style="padding: 10px; font-size: 1.6rem;">
         <input type="password" name="MatKhau" placeholder="Nhập mật khẩu" required style="padding: 10px; font-size: 1.6rem;">
@@ -18,14 +18,14 @@
             <option value="2">Nữ</option>
         </select>
 
-        <div id="roles-container">
+        <div id="roles-container" style="display: contents;">
             <!-- Các vai trò sẽ được thêm vào đây -->
         </div>
 
-        <select id="role-template" style="display: none; padding: 10px; font-size: 1.6rem;">
+        <select id="role-template" name="roles[]" style="display: none; padding: 10px; font-size: 1.6rem;">
             <option value="" disabled>Chọn vai trò</option>
             {% for role in all_roles %}
-                <option value="{{ role }}"trò>{{ role }}</option>
+                <option value="{{ role }}">{{ role }}</option>
             {% endfor %}
         </select>
 
@@ -56,7 +56,7 @@
             <td style="border: 1px solid black;">{{ user.Email }}</td>
             <td style="border: 1px solid black;">{{ user.SDT }}</td>
             <td style="border: 1px solid black;">{{ gender }}</td>
-             <td style="border: 1px solid black;">{{ role1 }}</td>
+            <td style="border: 1px solid black;">{{ role1 }}</td>
             <td style="border: 1px solid black;">{{ role2 }}</td>
             <td style="border: 1px solid black;">
                 <!-- Nút Sửa -->
@@ -75,45 +75,59 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-    const addRoleBtn = document.getElementById('add-role-btn');
-    const rolesContainer = document.getElementById('roles-container');
-    const roleTemplate = document.getElementById('role-template');
-    const maxRoles = 2; // Giới hạn số vai trò tối đa
+        const addRoleBtn = document.getElementById('add-role-btn');
+        const rolesContainer = document.getElementById('roles-container');
+        const roleTemplate = document.getElementById('role-template');
+        const addUserForm = document.getElementById('add-user-form');
+        const maxRoles = 2; // Giới hạn số vai trò tối đa
 
-    // Hàm kiểm tra xem giá trị vai trò đã được chọn trước đó chưa
-    function isRoleDuplicate(selectedRole) {
-        const allRoles = document.querySelectorAll('#roles-container select');
-        for (let i = 0; i < allRoles.length; i++) {
-            if (allRoles[i].value === selectedRole && allRoles[i].value !== "") {  // Kiểm tra nếu giá trị trùng
-                return true;
+        // Hàm để thêm vai trò mới
+        addRoleBtn.addEventListener('click', function() {
+            const currentRoles = document.querySelectorAll('#roles-container select').length;
+            if (currentRoles < maxRoles) {
+                const newRoleSelect = roleTemplate.cloneNode(true);
+                newRoleSelect.style.display = 'block'; // Hiển thị select
+                newRoleSelect.name="roles[]"; // Đảm bảo đúng tên
+
+                // Tạo nút Xóa cho vai trò
+                const deleteBtn = document.createElement('button');
+                deleteBtn.type = 'button';
+                deleteBtn.textContent = 'Xóa';
+                deleteBtn.style.padding = '5px 10px';
+                deleteBtn.style.fontSize = '1.6rem';
+                deleteBtn.style.backgroundColor = '#dc3545';
+                deleteBtn.style.color = 'white';
+                deleteBtn.style.border = 'none';
+                deleteBtn.style.cursor = 'pointer';
+
+                deleteBtn.addEventListener('click', function() {
+                    newRoleSelect.remove(); // Xóa vai trò khi nhấn nút Xóa
+                    deleteBtn.remove(); // Xóa nút Xóa
+                });
+
+                // Thêm vai trò mới vào container
+                rolesContainer.appendChild(newRoleSelect);
+                rolesContainer.appendChild(deleteBtn);
+            } else {
+                alert('Tối đa chỉ có 2 vai trò');
             }
-        }
-        return false;
-    }
+        });
 
-    // Hàm để thêm vai trò mới
-    addRoleBtn.addEventListener('click', function() {
-        // Kiểm tra số lượng vai trò hiện có
-        const currentRoles = document.querySelectorAll('#roles-container select').length;
-        if (currentRoles < maxRoles) {
-            // Tạo một bản sao của template select
-            const newRoleSelect = roleTemplate.cloneNode(true);
-            newRoleSelect.style.display = 'block'; // Hiển thị select
-
-            // Thêm sự kiện kiểm tra trùng vai trò khi thay đổi
-            newRoleSelect.addEventListener('change', function() {
-                const selectedRole = newRoleSelect.value;
-
-
-            // Thêm select vào container
-            rolesContainer.appendChild(newRoleSelect);
-        } else {
-            alert('Tối đa chỉ có 2 vai trò');
-        }
+        // Kiểm tra trùng vai trò khi gửi form
+        addUserForm.addEventListener('submit', function(event) {
+            const allRoles = document.querySelectorAll('#roles-container select');
+            let roles = [];
+            for (let i = 0; i < allRoles.length; i++) {
+                const roleValue = allRoles[i].value;
+                if (roleValue && roles.includes(roleValue)) {
+                    alert('Vai trò không được trùng.');
+                    event.preventDefault(); // Ngừng gửi form
+                    return;
+                }
+                roles.push(roleValue);
+            }
+        });
     });
-});
-
 </script>
-
 
 {% endblock %}

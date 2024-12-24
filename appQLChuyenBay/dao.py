@@ -1,4 +1,5 @@
 import json
+import logging
 import sqlite3
 from datetime import datetime, timedelta
 from enum import Enum
@@ -10,6 +11,7 @@ from flask import session, current_app, jsonify
 from flask_sqlalchemy import pagination
 from sqlalchemy import func
 from sqlalchemy import text
+from sqlalchemy.exc import SQLAlchemyError
 
 from models import NguoiDung, SanBay, NguoiDung_VaiTro, UserRole, ChuyenBay, TuyenBay, SBayTrungGian, VeChuyenBay, \
     ThongTinHanhKhach, QuyDinhSanBay, QuyDinhBanVe, QuyDinhVe, GioiTinh, BangGiaVe
@@ -715,3 +717,93 @@ def get_GiaVeByByIDSanBay(sanBayDi = None, sanBayDen=None, loaiGhe=None):
                              BangGiaVe.LoaiHangGhe.__eq__(loaiGhe))
     return query.first()[0]
 
+
+def check_email_exists2(email):
+    try:
+        logging.debug("Đang kiểm tra email: %s", email)
+        # Truy vấn ORM để kiểm tra email
+        result = db.session.query(NguoiDung).filter(NguoiDung.Email == email).first() is not None
+        logging.debug("Kết quả kiểm tra email: %s", result)
+        return result
+    except SQLAlchemyError as e:
+        logging.error("Lỗi khi kiểm tra email: %s", e)
+        raise
+
+
+def add_user2(hoten, email, matkhau, sdt, gioitinh):
+    try:
+        logging.debug("Đang thêm người dùng với thông tin: Họ tên: %s, Email: %s, SĐT: %s, Giới tính: %s", hoten, email,
+                      sdt, gioitinh)
+
+        # Chuyển giá trị giới tính từ số sang Enum
+        gioi_tinh_mapping = {
+            '1': GioiTinh.Nam,  # Enum.Nam
+            '2': GioiTinh.Nu  # Enum.Nu
+        }
+        gioitinh_enum = gioi_tinh_mapping.get(str(gioitinh))
+
+        if not gioitinh_enum:
+            raise ValueError("Giá trị GioiTinh không hợp lệ")
+
+        # Mã hóa mật khẩu
+        matkhau_hashed = hashlib.md5(matkhau.strip().encode('utf-8')).hexdigest()
+        logging.debug("Mật khẩu đã được mã hóa.")
+
+        # Tạo đối tượng người dùng
+        new_user = NguoiDung(
+            HoTen=hoten,
+            Email=email,
+            MatKhau=matkhau_hashed,
+            SDT=sdt,
+            GioiTinh=gioitinh_enum.name  # Lưu tên Enum như 'Nam' hoặc 'Nu'
+        )
+
+        # Thêm vào cơ sở dữ liệu
+        db.session.add(new_user)
+        db.session.commit()
+        logging.debug("Người dùng mới đã được thêm với ID: %s", new_user.ID_User)
+
+        return new_user.ID_User  # Trả về ID của người dùng mới
+    except SQLAlchemyError as e:
+        logging.error("Lỗi khi thêm người dùng: %s", e)
+        db.session.rollback()
+        raise
+    except Exception as ex:
+        logging.error("Lỗi ngoại lệ: %s", ex)
+        raise
+
+
+def assign_role_to_user(user_id, role):
+    try:
+        logging.debug("Đang gán vai trò: %s cho người dùng ID: %s", role, user_id)
+
+        # Chuyển đổi vai trò từ chuỗi sang Enum
+        role_mapping = {
+            "NhanVien": UserRole.NhanVien,
+            "NguoiQuanTri": UserRole.NguoiQuanTri,
+            "KhachHang": UserRole.KhachHang,
+            "NguoiKiemDuyet": UserRole.NguoiKiemDuyet
+        }
+
+        role_enum_value = role_mapping.get(role)
+
+        if not role_enum_value:
+            raise ValueError("Vai trò không hợp lệ")
+
+        # Tạo đối tượng ánh xạ giữa người dùng và vai trò
+        new_role_mapping = NguoiDung_VaiTro(
+            ID_User=user_id,
+            ID_VaiTro=role_enum_value.value  # Enum lưu giá trị dạng số
+        )
+
+        # Thêm vào cơ sở dữ liệu
+        db.session.add(new_role_mapping)
+        db.session.commit()
+        logging.debug("Vai trò %s đã được gán cho người dùng ID: %s", role_enum_value.name, user_id)
+    except SQLAlchemyError as e:
+        logging.error("Lỗi khi gán vai trò: %s", e)
+        db.session.rollback()
+        raise
+    except Exception as ex:
+        logging.error("Lỗi ngoại lệ: %s", ex)
+        raise
