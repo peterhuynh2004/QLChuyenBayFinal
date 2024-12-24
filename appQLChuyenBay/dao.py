@@ -8,7 +8,7 @@ from multiprocessing import connection
 
 from flask import session, current_app, jsonify
 from flask_sqlalchemy import pagination
-from sqlalchemy import func
+from sqlalchemy import func, extract
 from sqlalchemy import text
 from models import NguoiDung, SanBay, NguoiDung_VaiTro, UserRole, ChuyenBay, TuyenBay, SBayTrungGian, VeChuyenBay, \
     ThongTinHanhKhach, QuyDinhSanBay, QuyDinhBanVe, QuyDinhVe
@@ -649,3 +649,18 @@ def get_chuyen_bay():
 def dem_tong_tuyem_bay():
     tuyenbay = session.TuyenBay.query.count()
     return tuyenbay
+
+#Hàm gọi tên tuyến bay được liên kết với bảng chuyến bay
+def get_ten_tuyen_bay(id_tuyen_bay):
+    tuyen_bay = TuyenBay.query.filter_by(id_TuyenBay=id_tuyen_bay).first()
+    return tuyen_bay.tenTuyen if tuyen_bay else None
+
+def get_chuyen_bay_by_month(month=None):
+    """
+    Lấy danh sách chuyến bay theo tháng.
+    :param month: Tháng cần lọc (1-12). Nếu là None hoặc 'all' thì trả về tất cả chuyến bay.
+    :return: Danh sách chuyến bay.
+    """
+    if month and month != 'all':
+        return ChuyenBay.query.filter(extract('month', ChuyenBay.gio_Bay) == int(month)).all()
+    return ChuyenBay.query.all()

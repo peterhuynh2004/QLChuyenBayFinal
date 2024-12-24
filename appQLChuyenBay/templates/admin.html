@@ -123,8 +123,8 @@
                     <span class="material-symbols-outlined">language</span>
                     <div class="middle">
                         <div class="left">
-                            <h3>TỔNG SỐ GIỜ BAY</h3>
-                            <h1>{{ total_hours }}</h1>
+                            <h3>Tỷ Lệ Ghế Đã Đặt</h3>
+                            <h1>{{ avg_occupancy_rate }}</h1>
                         </div>
                         <div class="progress">
                             <svg>
@@ -140,51 +140,28 @@
 <!--            end insights section-->
 <!--            start Tình Trạng Chuyến Bay-->
             <div class="recent_order">
-                <h1>Tình Trạng Chuyến Bay</h1>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Mã Chuyến Bay</th>
-                        <th>Mã Tuyến Bay</th>
-                        <th>Số Lượng Hành Khách</th>
-                        <th>Tình Trạng</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>VJ123</td>
-                        <td>CNPM01</td>
-                        <td>88/90</td>
-                        <td class="warning">Chuẩn Bị Cất Cánh</td>
-                        <td class="primary">Chi Tiết</td>
-                    </tr>
-<!--                    -->
-                    <tr>
-                        <td>VN432</td>
-                        <td>CNPM02</td>
-                        <td>90/90</td>
-                        <td class="success">Đã Cất Cánh</td>
-                        <td class="primary">Chi Tiết</td>
-                    </tr>
-<!--                    -->
-                    <tr>
-                        <td>VC345</td>
-                        <td>CNPM03</td>
-                        <td>0/90</td>
-                        <td class="danger">Đã Huỷ Chuyến Bay</td>
-                        <td class="primary">Chi Tiết</td>
-                    </tr>
-<!--                    -->
-                    <tr>
-                        <td>VB576</td>
-                        <td>CNPM04</td>
-                        <td>53/90</td>
-                        <td class="warning">Chuẩn Bị Cất Cánh</td>
-                        <td class="primary">Chi Tiết</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+    <h1>Tình Trạng Chuyến Bay</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Mã Chuyến Bay</th>
+                <th>Tên Tuyến Bay</th>
+                <th>Mã Tuyến Bay</th>
+                <th>Số Lượng Hành Khách</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cb in chuyen_bay_info %}
+            <tr>
+                <td>{{ cb.id_chuyen_bay }}</td>
+                <td>{{ cb.ten_tuyen_bay }}</td>
+                <td>{{ cb.ma_tuyen_bay }}</td>
+                <td>{{ cb.so_luong_hanh_khach }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 <!--            end Tình Trạng Chuyến Bay-->
              {% endblock %}
         </main>

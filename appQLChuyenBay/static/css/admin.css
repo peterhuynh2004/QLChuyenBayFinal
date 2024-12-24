@@ -773,3 +773,136 @@ main .recent_order a{
     color: white;
 }
 
+/* View controls styles for table and chart views */
+.view-controls {
+    margin: 20px;
+    text-align: center;
+}
+
+.view-controls button {
+    padding: 10px 15px;
+    margin: 0 10px;
+    background-color: var(--clr-primary);
+    color: var(--clr-white);
+    border: none;
+    border-radius: var(--border-radius-1);
+    cursor: pointer;
+    outline: none;
+    transition: background-color 0.3s ease;
+}
+
+.view-controls button:hover {
+    background-color: var(--clr-primary-variant);
+}
+
+/* Table styles */
+#tableView table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+#tableView th, #tableView td {
+    padding: 12px 15px;
+    border: 1px solid var(--clr-info-light);
+    text-align: left;
+}
+
+#tableView th {
+    background-color: var(--clr-info-dark);
+    color: var(--clr-white);
+}
+
+#tableView tr:nth-child(even) {
+    background-color: var(--clr-info-light);
+}
+
+#tableView tr:hover {
+    background-color: var(--clr-light);
+}
+
+/* Chart container styles */
+#chartView {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#chartView .chart_types {
+     text-align: center;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center; /* Căn giữa các nút bấm */
+    flex-wrap: wrap;
+}
+
+#chartView .chart_types button {
+    padding: 10px 20px;
+    margin: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease; /* Thêm thời gian chuyển đổi để làm mượt hiệu ứng */
+    background-color: var(--clr-primary); /* Màu nền cho nút */
+    color: var(--clr-white); /* Màu chữ */
+    border: none; /* Bỏ đường viền */
+    border-radius: var(--border-radius-1); /* Làm tròn góc */
+}
+
+#chartView .chart_types button:hover {
+     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Hiệu ứng đổ bóng khi hover */
+    transform: translateY(-2px); /* Nhấc nút lên một chút */
+}
+#myChart {
+    max-height: 400px; /* Giới hạn chiều cao tối đa */
+    aspect-ratio: 1 / 1; /* Giữ tỷ lệ khung hình là vuông */
+}
+
+/* CSS cho nút chọn tháng */
+
+.view-header {
+    text-align: center; /* Căn giữa tiêu đề */
+    margin-bottom: 20px; /* Tạo khoảng cách dưới tiêu đề */
+}
+
+.month-selector {
+    display: inline-block; /* Hiển thị ngang */
+    margin-top: 10px; /* Tạo khoảng cách với tiêu đề */
+    font-size: 16px;
+}
+
+.month-selector label {
+    font-weight: bold;
+    margin-right: 5px; /* Khoảng cách giữa nhãn và dropdown */
+}
+
+.month-selector select {
+    padding: 5px 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.month-selector select:hover {
+    border-color: #007bff; /* Đổi màu viền khi hover */
+}
+
+.view-controls button {
+    margin-top: 15px; /* Tạo khoảng cách với dropdown */
+    padding: 10px 15px;
+    font-size: 14px;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.view-controls button:hover {
+    background-color: #0056b3;
+}
