@@ -667,22 +667,37 @@ def get_chuyen_bay_by_month(month=None):
 
 # Hàm dùng riêng cho quanly.hmtl
 
-def save_flight(id_tuyen_bay, gio_bay, tg_bay, gh1, gh2, gh1_dd, gh2_dd, list_seats):
+def save_flight(id_tuyen_bay, gio_bay, tg_bay, gh1, gh2, gh1_dd, gh2_dd):
     try:
+        # Ràng buộc: Ghế hạng 1 đã đặt không được vượt quá tổng số ghế hạng 1
+        if gh1_dd > gh1:
+            return {"status": "error", "message": "Số ghế hạng 1 đã đặt không được vượt quá tổng số ghế hạng 1."}
+
+        # Ràng buộc: Ghế hạng 2 đã đặt không được vượt quá tổng số ghế hạng 2
+        if gh2_dd > gh2:
+            return {"status": "error", "message": "Số ghế hạng 2 đã đặt không được vượt quá tổng số ghế hạng 2."}
+
+        # Ràng buộc: Giờ bay phải lớn hơn thời gian hiện tại ít nhất 60 phút
+        gio_bay_datetime = datetime.strptime(gio_bay, '%Y-%m-%dT%H:%M')  # Định dạng ISO từ form
+        now = datetime.now()
+        if gio_bay_datetime < now + timedelta(minutes=60):
+            return {"status": "error", "message": "Giờ bay phải lớn hơn thời gian hiện tại ít nhất 60 phút."}
+
+        # Nếu tất cả các ràng buộc hợp lệ, thêm chuyến bay vào cơ sở dữ liệu
         new_flight = ChuyenBay(
             id_TuyenBay=id_tuyen_bay,
-            gio_Bay=datetime.strptime(gio_bay, '%Y-%m-%dT%H:%M'),  # Định dạng ngày giờ theo chuẩn ISO
+            gio_Bay=gio_bay_datetime,
             tG_Bay=tg_bay,
             GH1=gh1,
             GH2=gh2,
             GH1_DD=gh1_dd,
             GH2_DD=gh2_dd,
-            ghes_dadat=','.join(list_seats)  # Lưu danh sách ghế đã đặt dưới dạng chuỗi
         )
         db.session.add(new_flight)
         db.session.commit()
-        return True
+        return {"status": "success", "message": "Cập nhật dữ liệu thành công!"}
+
     except Exception as e:
         db.session.rollback()
         print(f"Error saving flight: {e}")
-        return False
+        return {"status": "error", "message": "Đã xảy ra lỗi khi lưu dữ liệu."}

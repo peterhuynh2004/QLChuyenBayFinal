@@ -830,26 +830,50 @@ def quanlynguoidung():
 @app.route('/quanly', methods=['GET', 'POST'])
 def quanly():
     if request.method == 'POST':
-        # Lấy dữ liệu từ form
-        id_tuyen_bay = request.form['id_tuyen_bay']
-        gio_bay = request.form['gio_bay']
-        tg_bay = request.form['tg_bay']
-        gh1 = request.form['gh1']
-        gh2 = request.form['gh2']
-        gh1_dd = request.form.get('gh1_dd', 0)  # Sử dụng giá trị mặc định nếu không tồn tại
-        gh2_dd = request.form.get('gh2_dd', 0)
+        form_data = request.form.to_dict()  # Lưu lại dữ liệu người dùng nhập
 
-        list_seats = request.form.getlist('ghes_dadat')
+        # Xử lý dữ liệu từ form
+        id_chuyen_bay = form_data.get('id_chuyen_bay', '')
+        id_tuyen_bay = form_data.get('id_tuyen_bay', '')
+        gio_bay = form_data.get('gio_bay', '')
+        tg_bay = form_data.get('tg_bay', '')
+        gh1 = int(form_data.get('gh1', 0))
+        gh2 = int(form_data.get('gh2', 0))
+        gh1_dd = int(form_data.get('gh1_dd', 0))
+        gh2_dd = int(form_data.get('gh2_dd', 0))
 
-        # Gọi hàm save_flight để lưu dữ liệu
-        if dao.save_flight(id_tuyen_bay, gio_bay, tg_bay, gh1, gh2, gh1_dd, gh2_dd, list_seats):
-            flash('Thông tin chuyến bay đã được cập nhật thành công!', 'success')
+        # Kiểm tra ràng buộc
+        from datetime import datetime, timedelta
+
+        gio_bay_datetime = datetime.strptime(gio_bay, '%Y-%m-%dT%H:%M') if gio_bay else None
+        now = datetime.now()
+
+        if gh1_dd > gh1:
+            flash('Số ghế hạng 1 đã đặt không được vượt quá tổng số ghế hạng 1.', 'error')
+            return render_template('quanly.html', form_data=form_data)
+
+        if gh2_dd > gh2:
+            flash('Số ghế hạng 2 đã đặt không được vượt quá tổng số ghế hạng 2.', 'error')
+            return render_template('quanly.html', form_data=form_data)
+
+        if gio_bay_datetime and gio_bay_datetime < now + timedelta(minutes=60):
+            flash('Giờ bay phải lớn hơn thời gian hiện tại ít nhất 60 phút.', 'error')
+            return render_template('quanly.html', form_data=form_data)
+
+        # Gọi hàm save_flight
+        result = dao.save_flight(id_tuyen_bay, gio_bay, tg_bay, gh1, gh2, gh1_dd, gh2_dd)
+
+        # Xử lý kết quả từ DAO
+        if result and result.get("status") == "success":
+            flash(result["message"], 'success')
+            return redirect(url_for('quanly'))
         else:
-            flash('Lỗi khi lưu thông tin chuyến bay.', 'error')
+            flash(result.get("message", 'Lỗi khi cập nhật dữ liệu.'), 'error')
+            return render_template('quanly.html', form_data=form_data)
 
-        return redirect(url_for('quanly'))
+    # Nếu là GET, form trống
+    return render_template('quanly.html', form_data={})
 
-    return render_template('quanly.html')
 
 if __name__ == '__main__':
     with app.app_context():

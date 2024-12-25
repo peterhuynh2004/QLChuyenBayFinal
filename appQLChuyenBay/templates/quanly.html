@@ -34,22 +34,21 @@ Quản Lý Người Dùng
 <form class="quanly_container" method="post" action="{{ url_for('quanly') }}">
     <table>
         <thead>
-                <tr>
-            <th>id Chuyến Bay</th>
-            <th>id Tuyến Bay</th>
-            <th>Giờ Bay</th>
-            <th>Thời Gian Bay</th>
-        </tr>
+            <tr>
+                <th>id Chuyến Bay</th>
+                <th>id Tuyến Bay</th>
+                <th>Giờ Bay</th>
+                <th>Thời Gian Bay</th>
+            </tr>
         </thead>
         <tbody>
-                <tr>
-            <td><input type="number" name="id_chuyen_bay" required></td>
-            <td><input type="number" name="id_tuyen_bay" required></td>
-            <td><input type="datetime-local" name="gio_bay" required></td>
-            <td><input type="number" name="tg_bay" placeholder="Phút" required></td>
-        </tr>
+            <tr>
+                <td><input type="number" name="id_chuyen_bay" placeholder="vd: 1,2,3..." required min="1" max="999"  oninput="validateNumberInput(this);" value="{{ form_data.get('id_chuyen_bay', '') }}"></td>
+                <td><input type="number" name="id_tuyen_bay"  placeholder="id tuyến hiện có" required min="1" max="999" oninput="validateNumberInput(this);" value="{{ form_data.get('id_tuyen_bay', '') }}"></td>
+                <td><input type="datetime-local" name="gio_bay" required value="{{ form_data.get('gio_bay', '') }}"></td>
+                <td><input type="number" name="tg_bay" placeholder="Phút" required min="1" max="999999999" oninput="validateNumberInput(this);" value="{{ form_data.get('tg_bay', '') }}"></td>
+            </tr>
         </tbody>
-
     </table>
 
     <table class="second-table">
@@ -60,11 +59,10 @@ Quản Lý Người Dùng
             <th>Gh 2 đã đặt</th>
         </tr>
         <tr>
-
-            <td><input type="number" name="gh1" required></td>
-            <td><input type="number" name="gh2" required></td>
-            <td><input type="number" name="gh1_dd" required></td>
-            <td><input type="number" name="gh2_dd" required></td>
+            <td><input type="number" name="gh1"  placeholder="Số lượng ghế tối đa" required min="1" max="999" oninput="validateNumberInput(this);" value="{{ form_data.get('gh1', '') }}"></td>
+            <td><input type="number" name="gh2" placeholder="Số lượng ghế tối đa" required min="1" max="999" oninput="validateNumberInput(this);" value="{{ form_data.get('gh2', '') }}"></td>
+            <td><input type="number" name="gh1_dd" placeholder="Số lượng ghế" required min="1" max="999" oninput="validateNumberInput(this);" value="{{ form_data.get('gh1_dd', '') }}"></td>
+            <td><input type="number" name="gh2_dd" placeholder="Số lượng ghế" required min="1" max="999" oninput="validateNumberInput(this);" value="{{ form_data.get('gh2_dd', '') }}"></td>
         </tr>
     </table>
     <div class="button-group">
@@ -72,4 +70,27 @@ Quản Lý Người Dùng
     </div>
 </form>
 
+<script>
+function validateNumberInput(input) {
+    if (input.value < 1 || input.value > 999) {
+        alert('Chỉ được nhập số từ 1 đến 999');
+        input.value = ''; // Reset giá trị không hợp lệ
+    }
+}
+</script>
+
+{% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+    <div class="flash-messages">
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+{% endwith %}
+
 {% endblock %}
+
+
