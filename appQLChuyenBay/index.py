@@ -341,11 +341,20 @@ def banve(id_chuyen_bay):
     print(flight['ghe_dadat'])
     first_class_seats = flight['GH1']  # Số ghế hạng nhất
     economy_class_seats = flight['GH2']  # Số ghế hạng phổ thông
+
+    maTuyenBay = dao.get_idTuyenBayByIdChuyenBay(maChuyenBay=id_chuyen_bay)
+    sanBayDi = dao.get_idSanBayDiByIdTuyenBay(maTuyenBay)
+    sanBayDen = dao.get_idSanBayDenByIdTuyenBay(maTuyenBay)
+    giaVeHang1 = dao.get_GiaVeByByIDSanBay(sanBayDi=sanBayDi, sanBayDen=sanBayDen, loaiGhe="GH1")
+    giaVeHang2 = dao.get_GiaVeByByIDSanBay(sanBayDi=sanBayDi, sanBayDen=sanBayDen, loaiGhe="GH2")
+    print(f"{maTuyenBay},sanBayDi: {sanBayDi}, sanBayDen: {sanBayDen}, giave1: {giaVeHang1} {id_chuyen_bay}")
     return render_template(
         'ban_ve.html',
         first_class_seats=first_class_seats,
         economy_class_seats=economy_class_seats,
-        flight=flight  # Truyền flight vào template
+        flight=flight, # Truyền flight vào template
+        giaVeHang1=giaVeHang1,
+        giaVeHang2=giaVeHang2
     )
 
 

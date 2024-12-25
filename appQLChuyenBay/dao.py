@@ -717,6 +717,27 @@ def get_GiaVeByByIDSanBay(sanBayDi = None, sanBayDen=None, loaiGhe=None):
     return query.first()[0]
 
 
+def get_idSanBayDiByIdTuyenBay(maTuyenBay=None):
+    query = TuyenBay.query.with_entities(TuyenBay.id_SanBayDi)
+    if maTuyenBay:
+        query = query.filter(TuyenBay.id_TuyenBay == maTuyenBay)
+    result = query.first()
+    if result is None:
+        print("Không tìm thấy mã sân bay")
+        return None  # Hoặc giá trị mặc định, ví dụ 0
+    return result[0]
+
+def get_idSanBayDenByIdTuyenBay(maTuyenBay=None):
+    query = TuyenBay.query.with_entities(TuyenBay.id_SanBayDen)
+    if maTuyenBay:
+        query = query.filter(TuyenBay.id_TuyenBay == maTuyenBay)
+    result = query.first()
+    if result is None:
+        print("Không tìm thấy mã sân bay")
+        return None  # Hoặc giá trị mặc định, ví dụ 0
+    return result[0]
+
+
 def check_email_exists2(email):
     try:
         logging.debug("Đang kiểm tra email: %s", email)
