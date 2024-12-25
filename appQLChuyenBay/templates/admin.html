@@ -60,7 +60,7 @@
                     <span class="material-symbols-outlined">settings</span>
                     <h3>Cài Đặt</h3>
                 </a>
-                <a href="{{ url_for('quanly') }}?id=125">
+                <a href="{{ url_for('quanly') }}">
                     <span class="material-symbols-outlined">add</span>
                     <h3>Quản Lý</h3>
                 </a>
@@ -187,11 +187,12 @@
                         <img src="{{ url_for('static', filename='img/LeVietHaiQuan.jpg') }}" alt="Ảnh admin page :D">
                     </div>
                 </div>
-                {%  endblock %}
+                {% endblock %}
             </div>
 <!--            End top section-->
 <!--            Start Recent Updates section-->
             <div class="recent_updates">
+                {% block recent_updates %}
                 <h2>Lưu Thông</h2>
                 <div class="updates">
                 <div class="update">
@@ -221,10 +222,12 @@
                     </div>
                 </div>
             </div>
+                {% endblock %}
                 </div>
 <!--            End Recent Updates section-->
 <!--            Star Analytic section-->
             <div class="sales_analytics">
+                {% block sale_analytics %}
                 <h2>Thống Kế Nhanh</h2>
                 <div class="item olion">
                     <div class="icon">
@@ -275,6 +278,7 @@
                 <span class="material-symbols-outlined">add</span>
             </div>
         </div>
+            {% endblock %}
         </div>
 
 <!--        End right section-->

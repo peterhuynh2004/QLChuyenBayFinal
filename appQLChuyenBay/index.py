@@ -827,33 +827,29 @@ def quanlynguoidung():
      return render_template('quanlynguoidung.html')
 
 
-@app.route('/admin/quanly')
+@app.route('/quanly', methods=['GET', 'POST'])
 def quanly():
-    return  render_template('quanly.html')
+    if request.method == 'POST':
+        # Lấy dữ liệu từ form
+        id_tuyen_bay = request.form['id_tuyen_bay']
+        gio_bay = request.form['gio_bay']
+        tg_bay = request.form['tg_bay']
+        gh1 = request.form['gh1']
+        gh2 = request.form['gh2']
+        gh1_dd = request.form.get('gh1_dd', 0)  # Sử dụng giá trị mặc định nếu không tồn tại
+        gh2_dd = request.form.get('gh2_dd', 0)
 
-@login.user_loader
-def load_user(user_id):
-    try:
-        # Chuyển user_id sang dạng số nguyên nếu cần
-        user_id = int(user_id)
+        list_seats = request.form.getlist('ghes_dadat')
 
-        # Lấy thông tin người dùng từ DAO
-        user = dao.get_user_by_id(user_id)
+        # Gọi hàm save_flight để lưu dữ liệu
+        if dao.save_flight(id_tuyen_bay, gio_bay, tg_bay, gh1, gh2, gh1_dd, gh2_dd, list_seats):
+            flash('Thông tin chuyến bay đã được cập nhật thành công!', 'success')
+        else:
+            flash('Lỗi khi lưu thông tin chuyến bay.', 'error')
 
-        # Kiểm tra xem user có tồn tại hay không
-        if user:
-            return user  # Trả về đối tượng người dùng
-        return None  # Không tìm thấy người dùng
-    except (ValueError, TypeError):
-        # Xử lý trường hợp user_id không hợp lệ
-        print("Invalid user_id:", user_id)
-        return None
-    except Exception as e:
-        # Xử lý các lỗi khác
-        print("Error loading user:", e)
-        return None
+        return redirect(url_for('quanly'))
 
-
+    return render_template('quanly.html')
 
 if __name__ == '__main__':
     with app.app_context():

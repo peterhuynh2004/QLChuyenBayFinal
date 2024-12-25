@@ -906,3 +906,110 @@ main .recent_order a{
 .view-controls button:hover {
     background-color: #0056b3;
 }
+
+/* CSS cho quản lý chuyến bay */
+
+main .quanly_container {
+    margin-top: 2rem;
+    width: 100%;
+}
+
+main .quanly_container h2 {
+    color: var(--clr-dark);
+}
+
+main .quanly_container table {
+    background-color: var(--clr-white);
+    width: 100%;
+    border-radius: var(--card-border-radius);
+    padding: var(--card-padding);
+    text-align: center;
+    box-shadow: var(--box-shadow);
+    transition: all .3s ease;
+    color: var(--clr-dark);
+}
+
+main .quanly_container table:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.3s ease;
+}
+
+main table tbody tr {
+    height: 3.8rem;
+    border-bottom: 1px solid var(--clr-white);
+    color: var(--clr-dark-variant);
+}
+
+main table tbody td {
+    padding: 0.5rem 1rem;
+    color: var(--clr-dark-variant);
+    border-bottom: 1px solid var(--clr-dark);
+}
+
+main table tbody tr:hover {
+    background-color: var(--clr-light);
+    color: var(--clr-dark);
+}
+
+main table tbody tr:last-child td {
+    border: none;
+}
+
+main .quanly_container a {
+    text-align: center;
+    display: block;
+    margin: 1rem;
+}
+
+.quanly_container table {
+    background-color: var(--clr-white);
+    width: 100%;
+    border-radius: var(--card-border-radius);
+    padding: var(--card-padding);
+    text-align: center;
+    box-shadow: var(--box-shadow);
+    transition: all .3s ease;
+    color: var(--clr-dark);
+    margin-bottom: 2rem; /* Thêm khoảng cách dưới bảng đầu tiên */
+}
+
+.quanly_container table:last-of-type {
+    margin-bottom: 0; /* Loại bỏ khoảng cách dưới bảng cuối cùng */
+}
+
+/* */
+
+.quanly_container .button-group {
+    margin-top: 1rem; /* Thêm khoảng cách phía trên cho nhóm nút */
+    text-align: center; /* Căn giữa các nút */
+    padding: 0.5rem; /* Padding xung quanh các nút */
+    background-color: #f4f4f4; /* Màu nền cho nhóm nút */
+    border-radius: 8px; /* Bo tròn góc */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Thêm bóng đổ nhẹ */
+}
+
+.quanly_container .button-group button {
+    margin: 0 10px; /* Khoảng cách giữa các nút */
+    padding: 0.5rem 1rem; /* Padding cho nút */
+    font-size: 1rem; /* Kích thước font chữ */
+    cursor: pointer; /* Con trỏ chuột hiển thị dạng pointer khi di chuyển vào nút */
+    border: none; /* Bỏ đường viền */
+    color: #fff; /* Màu chữ */
+    transition: background-color 0.3s ease; /* Hiệu ứng khi thay đổi màu nền */
+}
+
+.quanly_container .button-group .btn-light {
+    background-color: #bbb; /* Màu nền cho nút Quay lại */
+}
+
+.quanly_container .button-group .btn-light:hover {
+    background-color: #aaa; /* Màu nền khi hover nút Quay lại */
+}
+
+.quanly_container .button-group .btn-blue {
+    background-color: #007bff; /* Màu nền cho nút Lưu dữ liệu */
+}
+
+.quanly_container .button-group .btn-blue:hover {
+    background-color: #0056b3; /* Màu nền khi hover nút Lưu dữ liệu */
+}

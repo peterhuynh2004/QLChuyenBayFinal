@@ -6,10 +6,15 @@ from mailbox import Message
 import re
 from multiprocessing import connection
 
+from cloudinary.utils import now
 from flask import session, current_app, jsonify
 from flask_sqlalchemy import pagination
-from sqlalchemy import func, extract
+from sqlalchemy import func, extract, case
 from sqlalchemy import text
+from sqlalchemy.future import engine
+from sqlalchemy import func, text,and_
+from datetime import datetime
+
 from models import NguoiDung, SanBay, NguoiDung_VaiTro, UserRole, ChuyenBay, TuyenBay, SBayTrungGian, VeChuyenBay, \
     ThongTinHanhKhach, QuyDinhSanBay, QuyDinhBanVe, QuyDinhVe
 from appQLChuyenBay import app, db, mail
@@ -641,15 +646,6 @@ def update_user_roles(user_id, new_roles):
         session.close()
 
 
-def get_chuyen_bay():
-    chuyenbay = session.ChuyenBay.query.all()
-    return chuyenbay
-
-
-def dem_tong_tuyem_bay():
-    tuyenbay = session.TuyenBay.query.count()
-    return tuyenbay
-
 #Hàm gọi tên tuyến bay được liên kết với bảng chuyến bay
 def get_ten_tuyen_bay(id_tuyen_bay):
     tuyen_bay = TuyenBay.query.filter_by(id_TuyenBay=id_tuyen_bay).first()
@@ -664,3 +660,29 @@ def get_chuyen_bay_by_month(month=None):
     if month and month != 'all':
         return ChuyenBay.query.filter(extract('month', ChuyenBay.gio_Bay) == int(month)).all()
     return ChuyenBay.query.all()
+
+
+
+
+
+# Hàm dùng riêng cho quanly.hmtl
+
+def save_flight(id_tuyen_bay, gio_bay, tg_bay, gh1, gh2, gh1_dd, gh2_dd, list_seats):
+    try:
+        new_flight = ChuyenBay(
+            id_TuyenBay=id_tuyen_bay,
+            gio_Bay=datetime.strptime(gio_bay, '%Y-%m-%dT%H:%M'),  # Định dạng ngày giờ theo chuẩn ISO
+            tG_Bay=tg_bay,
+            GH1=gh1,
+            GH2=gh2,
+            GH1_DD=gh1_dd,
+            GH2_DD=gh2_dd,
+            ghes_dadat=','.join(list_seats)  # Lưu danh sách ghế đã đặt dưới dạng chuỗi
+        )
+        db.session.add(new_flight)
+        db.session.commit()
+        return True
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error saving flight: {e}")
+        return False
