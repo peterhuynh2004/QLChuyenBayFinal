@@ -76,6 +76,7 @@ class ChuyenBay(db.Model):
         # Lấy danh sách ghế đã đặt dưới dạng một danh sách (ví dụ: ['F1', 'E10'])
         return self.ghes_dadat.split(',')
 
+
 class VeChuyenBay(db.Model):
     __tablename__ = 'VeChuyenBay'
 
@@ -169,45 +170,49 @@ class SBayTrungGian(db.Model):
     ThoiGianDung = Column(Integer, nullable=False)  # Thời gian dừng (phút)
     GhiChu = Column(String(255), nullable=True)  # Ghi chú
 
-class QuyDinh(db.Model):
-        __tablename__ = 'QuyDinh'
-        ID_QuyDinh = Column(Integer, primary_key=True, autoincrement=True)
-        TenQuyDinh = Column(String(255), nullable=False)
-        MoTa = Column(String(1000), nullable=True)
-        LoaiQuyDinh = Column(String(50), nullable=False)  # Sử dụng để phân biệt loại quy định
-        __mapper_args__ = {
-            'polymorphic_identity': 'QuyDinh',
-            'polymorphic_on': LoaiQuyDinh,
-        }
 
-class QuyDinhBanVe(QuyDinh):
-        __tablename__ = 'QuyDinhBanVe'
-        ID_QuyDinh = Column(Integer, ForeignKey('QuyDinh.ID_QuyDinh'), primary_key=True)
-        ThoiGianBatDauBan = Column(Integer, nullable=False)  # Thời gian bắt đầu bán vé (ngày trước chuyến bay)
-        ThoiGianKetThucBan = Column(Float,
-                                    nullable=False)  # Thời gian kết thúc bán vé (ngày trước chuyến bay)
-        __mapper_args__ = {
-            'polymorphic_identity': 'QuyDinhBanVe'
+class QuyDinh(db.Model):
+    __tablename__ = 'QuyDinh'
+    ID_QuyDinh = Column(Integer, primary_key=True, autoincrement=True)
+    TenQuyDinh = Column(String(255), nullable=False)
+    MoTa = Column(String(1000), nullable=True)
+    LoaiQuyDinh = Column(String(50), nullable=False)  # Sử dụng để phân biệt loại quy định
+    __mapper_args__ = {
+        'polymorphic_identity': 'QuyDinh',
+        'polymorphic_on': LoaiQuyDinh,
     }
 
+
+class QuyDinhBanVe(QuyDinh):
+    __tablename__ = 'QuyDinhBanVe'
+    ID_QuyDinh = Column(Integer, ForeignKey('QuyDinh.ID_QuyDinh'), primary_key=True)
+    ThoiGianBatDauBan = Column(Integer, nullable=False)  # Thời gian bắt đầu bán vé (ngày trước chuyến bay)
+    ThoiGianKetThucBan = Column(Float,
+                                nullable=False)  # Thời gian kết thúc bán vé (ngày trước chuyến bay)
+    __mapper_args__ = {
+        'polymorphic_identity': 'QuyDinhBanVe'
+    }
+
+
 class QuyDinhVe(QuyDinh):
-        __tablename__ = 'QuyDinhVe'
-        # Khóa chính tự động tăng
-        ID_QuyDinh = Column(Integer, ForeignKey('QuyDinh.ID_QuyDinh'), primary_key=True)
+    __tablename__ = 'QuyDinhVe'
+    # Khóa chính tự động tăng
+    ID_QuyDinh = Column(Integer, ForeignKey('QuyDinh.ID_QuyDinh'), primary_key=True)
 
-        # Các cột dữ liệu
-        SoLuongHangGhe1 = Column(Integer, nullable=False)  # Số lượng hạng ghế 1
-        SoLuongHangGhe2 = Column(Integer, nullable=False)  # Số lượng hạng ghế 2
+    # Các cột dữ liệu
+    SoLuongHangGhe1 = Column(Integer, nullable=False)  # Số lượng hạng ghế 1
+    SoLuongHangGhe2 = Column(Integer, nullable=False)  # Số lượng hạng ghế 2
 
-        # Các điều kiện kiểm tra (Check Constraints)
-        __table_args__ = (
-            CheckConstraint('SoLuongHangGhe1 > 0', name='quydinhve_chk_1'),
-            CheckConstraint('SoLuongHangGhe2 > 0', name='quydinhve_chk_2'),
-        )
+    # Các điều kiện kiểm tra (Check Constraints)
+    __table_args__ = (
+        CheckConstraint('SoLuongHangGhe1 > 0', name='quydinhve_chk_1'),
+        CheckConstraint('SoLuongHangGhe2 > 0', name='quydinhve_chk_2'),
+    )
 
-        __mapper_args__ = {
-            'polymorphic_identity': 'QuyDinhVe'
-        }
+    __mapper_args__ = {
+        'polymorphic_identity': 'QuyDinhVe'
+    }
+
 
 class BangGiaVe(db.Model):
     __tablename__ = 'BangGiaVe'
@@ -216,7 +221,7 @@ class BangGiaVe(db.Model):
     ID_SanBayDi = Column(Integer, ForeignKey('SanBay.id_SanBay'), nullable=False)  # Khóa ngoại đến bảng SanBay
     ID_SanBayDen = Column(Integer, ForeignKey('SanBay.id_SanBay'), nullable=False)  # Khóa ngoại đến bảng SanBay
     ID_PhuThu = Column(Integer, ForeignKey('PhuThuDacBiet.ID'), nullable=True)  # Khóa ngoại đến bảng PhuThuDacBiet
-    Gia_Ve = Column(Integer,nullable=False)
+    Gia_Ve = Column(Integer, nullable=False)
     # Quan hệ với bảng SanBay
     san_bay_di = relationship('SanBay', foreign_keys=[ID_SanBayDi])
     san_bay_den = relationship('SanBay', foreign_keys=[ID_SanBayDen])
@@ -229,21 +234,22 @@ class BangGiaVe(db.Model):
         UniqueConstraint('ID_SanBayDi', 'ID_SanBayDen', 'LoaiHangGhe', name='unique_sanbay_hangghe'),
     )
 
+
 class QuyDinhSanBay(QuyDinh):
-        __tablename__ = 'QuyDinhSanBay'
-        # Khóa chính tự động tăng
-        ID_QuyDinh = Column(Integer, ForeignKey('QuyDinh.ID_QuyDinh'), primary_key=True)
+    __tablename__ = 'QuyDinhSanBay'
+    # Khóa chính tự động tăng
+    ID_QuyDinh = Column(Integer, ForeignKey('QuyDinh.ID_QuyDinh'), primary_key=True)
 
-        # Các cột dữ liệu
-        SoLuongSanBay = Column(Integer, nullable=False)  # Số lượng sân bay
-        ThoiGianBayToiThieu = Column(Integer, nullable=False)  # Thời gian bay tối thiểu (phút)
-        SanBayTrungGianToiDa = Column(Integer, nullable=False)  # Số lượng sân bay trung gian tối đa
-        ThoiGianDungToiThieu = Column(Integer, nullable=False)  # Thời gian dừng tối thiểu (phút)
-        ThoiGianDungToiDa = Column(Integer, nullable=False)  # Thời gian dừng tối đa (phút)
+    # Các cột dữ liệu
+    SoLuongSanBay = Column(Integer, nullable=False)  # Số lượng sân bay
+    ThoiGianBayToiThieu = Column(Integer, nullable=False)  # Thời gian bay tối thiểu (phút)
+    SanBayTrungGianToiDa = Column(Integer, nullable=False)  # Số lượng sân bay trung gian tối đa
+    ThoiGianDungToiThieu = Column(Integer, nullable=False)  # Thời gian dừng tối thiểu (phút)
+    ThoiGianDungToiDa = Column(Integer, nullable=False)  # Thời gian dừng tối đa (phút)
 
-        __mapper_args__ = {
-            'polymorphic_identity': 'QuyDinhSanBay'
-        }
+    __mapper_args__ = {
+        'polymorphic_identity': 'QuyDinhSanBay'
+    }
 
 
 class PhuThuDacBiet(db.Model):
@@ -265,13 +271,91 @@ class ThongTinHanhKhach(db.Model):
     ID_User = Column(Integer, ForeignKey('NguoiDung.ID_User'), nullable=False)  # Liên kết với người dùng
 
 
-
 if __name__ == '__main__':
     with app.app_context():
+        banggiave_data = [
+            # Côn Đảo - Phù Cát
+            BangGiaVe(LoaiHangGhe='GH1', ID_SanBayDi=1, ID_SanBayDen=2, ID_PhuThu=None, Gia_Ve=1500000),
+            BangGiaVe(LoaiHangGhe='GH2', ID_SanBayDi=1, ID_SanBayDen=2, ID_PhuThu=None, Gia_Ve=1200000),
 
-        db.drop_all()
-        db.create_all()
+            # Phù Cát - Bình Định
+            BangGiaVe(LoaiHangGhe='GH1', ID_SanBayDi=2, ID_SanBayDen=3, ID_PhuThu=None, Gia_Ve=1800000),
+            BangGiaVe(LoaiHangGhe='GH2', ID_SanBayDi=2, ID_SanBayDen=3, ID_PhuThu=None, Gia_Ve=1400000),
 
+            # Cà Mau - Cà Mau
+            BangGiaVe(LoaiHangGhe='GH1', ID_SanBayDi=3, ID_SanBayDen=4, ID_PhuThu=None, Gia_Ve=2000000),
+            BangGiaVe(LoaiHangGhe='GH2', ID_SanBayDi=3, ID_SanBayDen=4, ID_PhuThu=None, Gia_Ve=1600000),
+
+            # Cần Thơ - Cần Thơ
+            BangGiaVe(LoaiHangGhe='GH1', ID_SanBayDi=4, ID_SanBayDen=6, ID_PhuThu=None, Gia_Ve=2200000),
+            BangGiaVe(LoaiHangGhe='GH2', ID_SanBayDi=4, ID_SanBayDen=6, ID_PhuThu=None, Gia_Ve=1800000),
+
+            # Đà Nẵng - Đà Nẵng
+            BangGiaVe(LoaiHangGhe='GH1', ID_SanBayDi=6, ID_SanBayDen=10, ID_PhuThu=None, Gia_Ve=2500000),
+            BangGiaVe(LoaiHangGhe='GH2', ID_SanBayDi=6, ID_SanBayDen=10, ID_PhuThu=None, Gia_Ve=2000000),
+
+            # Nội Bài - Hà Nội
+            BangGiaVe(LoaiHangGhe='GH1', ID_SanBayDi=10, ID_SanBayDen=11, ID_PhuThu=None, Gia_Ve=2800000),
+            BangGiaVe(LoaiHangGhe='GH2', ID_SanBayDi=10, ID_SanBayDen=11, ID_PhuThu=None, Gia_Ve=2300000),
+
+            # Tân Sơn Nhất - Thành phố Hồ Chí Minh
+            BangGiaVe(LoaiHangGhe='GH1', ID_SanBayDi=11, ID_SanBayDen=14, ID_PhuThu=None, Gia_Ve=3000000),
+            BangGiaVe(LoaiHangGhe='GH2', ID_SanBayDi=11, ID_SanBayDen=14, ID_PhuThu=None, Gia_Ve=2500000),
+
+            # Phú Quốc - Kiên Giang
+            BangGiaVe(LoaiHangGhe='GH1', ID_SanBayDi=14, ID_SanBayDen=19, ID_PhuThu=None, Gia_Ve=3200000),
+            BangGiaVe(LoaiHangGhe='GH2', ID_SanBayDi=14, ID_SanBayDen=19, ID_PhuThu=None, Gia_Ve=2700000),
+
+            # Chu Lai - Quảng Nam
+            BangGiaVe(LoaiHangGhe='GH1', ID_SanBayDi=19, ID_SanBayDen=22, ID_PhuThu=None, Gia_Ve=3500000),
+            BangGiaVe(LoaiHangGhe='GH2', ID_SanBayDi=19, ID_SanBayDen=22, ID_PhuThu=None, Gia_Ve=3000000),
+
+            # Vân Đồn - Quảng Ninh
+            BangGiaVe(LoaiHangGhe='GH1', ID_SanBayDi=22, ID_SanBayDen=1, ID_PhuThu=None, Gia_Ve=3800000),
+            BangGiaVe(LoaiHangGhe='GH2', ID_SanBayDi=22, ID_SanBayDen=1, ID_PhuThu=None, Gia_Ve=3300000),
+
+            # Cà Mau - Phú Cát
+            BangGiaVe(LoaiHangGhe='GH1', ID_SanBayDi=3, ID_SanBayDen=2, ID_PhuThu=None, Gia_Ve=4000000),
+            BangGiaVe(LoaiHangGhe='GH2', ID_SanBayDi=3, ID_SanBayDen=2, ID_PhuThu=None, Gia_Ve=3500000),
+
+            # Cần Thơ - Cà Mau
+            BangGiaVe(LoaiHangGhe='GH1', ID_SanBayDi=4, ID_SanBayDen=3, ID_PhuThu=None, Gia_Ve=4200000),
+            BangGiaVe(LoaiHangGhe='GH2', ID_SanBayDi=4, ID_SanBayDen=3, ID_PhuThu=None, Gia_Ve=3700000),
+
+            # Đà Nẵng - Cần Thơ
+            BangGiaVe(LoaiHangGhe='GH1', ID_SanBayDi=6, ID_SanBayDen=4, ID_PhuThu=None, Gia_Ve=4500000),
+            BangGiaVe(LoaiHangGhe='GH2', ID_SanBayDi=6, ID_SanBayDen=4, ID_PhuThu=None, Gia_Ve=4000000),
+
+            # Tân Sơn Nhất - Đà Nẵng
+            BangGiaVe(LoaiHangGhe='GH1', ID_SanBayDi=11, ID_SanBayDen=6, ID_PhuThu=None, Gia_Ve=4700000),
+            BangGiaVe(LoaiHangGhe='GH2', ID_SanBayDi=11, ID_SanBayDen=6, ID_PhuThu=None, Gia_Ve=4200000),
+
+            # Phú Quốc - Tân Sơn Nhất
+            BangGiaVe(LoaiHangGhe='GH1', ID_SanBayDi=14, ID_SanBayDen=11, ID_PhuThu=None, Gia_Ve=5000000),
+            BangGiaVe(LoaiHangGhe='GH2', ID_SanBayDi=14, ID_SanBayDen=11, ID_PhuThu=None, Gia_Ve=4500000),
+
+            # Chu Lai - Phú Quốc
+            BangGiaVe(LoaiHangGhe='GH1', ID_SanBayDi=19, ID_SanBayDen=14, ID_PhuThu=None, Gia_Ve=5500000),
+            BangGiaVe(LoaiHangGhe='GH2', ID_SanBayDi=19, ID_SanBayDen=14, ID_PhuThu=None, Gia_Ve=5000000),
+
+            # Vân Đồn - Chu Lai
+            BangGiaVe(LoaiHangGhe='GH1', ID_SanBayDi=22, ID_SanBayDen=19, ID_PhuThu=None, Gia_Ve=5800000),
+            BangGiaVe(LoaiHangGhe='GH2', ID_SanBayDi=22, ID_SanBayDen=19, ID_PhuThu=None, Gia_Ve=5300000),
+
+            # Phù Cát - Vân Đồn
+            BangGiaVe(LoaiHangGhe='GH1', ID_SanBayDi=2, ID_SanBayDen=22, ID_PhuThu=None, Gia_Ve=6000000),
+            BangGiaVe(LoaiHangGhe='GH2', ID_SanBayDi=2, ID_SanBayDen=22, ID_PhuThu=None, Gia_Ve=5500000),
+
+            # Cà Mau - Đà Nẵng
+            BangGiaVe(LoaiHangGhe='GH1', ID_SanBayDi=3, ID_SanBayDen=6, ID_PhuThu=None, Gia_Ve=6200000),
+            BangGiaVe(LoaiHangGhe='GH2', ID_SanBayDi=3, ID_SanBayDen=6, ID_PhuThu=None, Gia_Ve=5700000),
+
+            # Cần Thơ - Tân Sơn Nhất
+            BangGiaVe(LoaiHangGhe='GH1', ID_SanBayDi=4, ID_SanBayDen=11, ID_PhuThu=None, Gia_Ve=6500000),
+            BangGiaVe(LoaiHangGhe='GH2', ID_SanBayDi=4, ID_SanBayDen=11, ID_PhuThu=None, Gia_Ve=6000000),
+        ]
+        db.session.add_all(banggiave_data)
+        db.session.commit()
         # Tạo dữ liệu cho QuyDinhBanVe
         # # new_quy_dinh_ban_ve = QuyDinhBanVe(
         #     TenQuyDinh="Quy định bán vé",
@@ -284,7 +368,6 @@ if __name__ == '__main__':
         # # Thêm dữ liệu vào cơ sở dữ liệu
         # db.session.add(new_quy_dinh_ban_ve)
         # db.session.commit()
-
 
         # print("Đã tạo dữ liệu cho QuyDinhBanVe.")
         # Tạo dữ liệu cho quy định sân bay
@@ -371,9 +454,7 @@ if __name__ == '__main__':
         # db.create_all()
         # db.drop_all()
 
-
         # data sân bay
-
         # airports = [
         #     {"Sanbay": "Côn Đảo", "Tinh": "Bà Rịa – Vũng Tàu"},
         #     {"Sanbay": "Phù Cát", "Tinh": "Bình Định"},
@@ -757,11 +838,6 @@ if __name__ == '__main__':
         # db.session.add_all([vechuyenbay1, vechuyenbay2])
         # db.session.commit()
 
-
-
-
-
-
         # data chuyen bay
 
         # # data Vé Chuyến bay
@@ -787,8 +863,8 @@ if __name__ == '__main__':
         #                        tG_Bay=datetime(2024, 12, 17, 8, 0), GH1=60, GH2=110, GH1_DD=12, GH2_DD=18)
         # db.session.add_all([chuyenbay1, chuyenbay2, chuyenbay3])
         # db.session.commit()
-        #
-        # #themdatatuyenbay
+
+        # themdatatuyenbay
         # tuyenbay1 = TuyenBay(tenTuyen="Côn Đảo - Tân Sơn Nhất", id_SanBayDi=1, id_SanBayDen=11, doanhThu=50000000,
         #                      soLuotBay=150, tyLe=90)
         # tuyenbay2 = TuyenBay(tenTuyen="Phù Cát - Nội Bài", id_SanBayDi=2, id_SanBayDen=10, doanhThu=30000000,

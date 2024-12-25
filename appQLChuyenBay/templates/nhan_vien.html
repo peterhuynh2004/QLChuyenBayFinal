@@ -15,7 +15,7 @@
     </div>
 
     <!-- Kiểm tra và hiển thị vai trò tương ứng -->
-    {% if 'NhanVien' in user_role_change or 'NguoiQuanTri' in user_role_change %}
+    {% if 'NhanVien' in user_role_change %}
     <div class="col index_nv">
         <div class="card imgnv" style="width:250px;">
             <img class="card-img-top" src="https://res.cloudinary.com/ddgxultsd/image/upload/v1733713076/zwa6c4ubxtq7smtxm9aq.png" alt="Card image">
@@ -35,7 +35,7 @@
             <div class="card-body">
                 <h4 class="card-title">Đăng nhập dưới vai trò:</h4>
                 <p class="card-text">Người quản trị</p>
-                <a href="/chuc_nang" class="btn btn-primary">Đăng nhập ngay</a>
+                <a href="/admin/" class="btn btn-primary">Đăng nhập ngay</a>
             </div>
         </div>
     </div>

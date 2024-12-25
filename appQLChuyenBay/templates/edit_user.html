@@ -1,0 +1,23 @@
+<form method="POST" style="margin-left:20%;">
+    <h2 style="font-size:2.8rem; margin-bottom:15px;">THAY ĐỔI THÔNG TIN</h2>
+    <div>
+        <label for="HoTen" style="font-size:2.2rem; margin-bottom:5px;">Họ và tên:</label>
+        <input type="text" name="HoTen" value="{{ user.HoTen }}" style="font-size:2.2rem; margin-bottom:5px;" required>
+    </div>
+    <div>
+        <label for="Email" style="font-size:2.2rem; margin-bottom:5px;">Email:</label>
+        <input type="email" name="Email" value="{{ user.Email }}" style="font-size:2.2rem; margin-bottom:5px;" required>
+    </div>
+    <div>
+        <label for="SDT" style="font-size:2.2rem; margin-bottom:5px;">Số điện thoại:</label>
+        <input type="text" name="SDT" value="{{ user.SDT }}" style="font-size:2.2rem; margin-bottom:5px;" required>
+    </div>
+    <div>
+        <label for="GioiTinh" style="font-size:2.2rem; margin-bottom:5px;">Giới tính:</label>
+        <select name="GioiTinh" style="font-size:2.2rem; margin-bottom:5px;" required>
+            <option value="Nam" {% if user.GioiTinh == 'Nam' %}selected{% endif %}>Nam</option>
+            <option value="Nu" {% if user.GioiTinh == 'Nu' %}selected{% endif %}>Nữ</option>
+        </select>
+    </div>
+    <button type="submit" style="padding: 5px 10px; font-size: 1.6rem; background-color: #28a745; color: white; border: none; cursor: pointer;">Xác nhận</button>
+</form>

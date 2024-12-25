@@ -19,7 +19,7 @@ from models import NguoiDung, SanBay, NguoiDung_VaiTro, UserRole, ChuyenBay, Tuy
 from appQLChuyenBay import app, db, mail
 import hashlib
 import cloudinary.uploader
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, aliased
 from sqlalchemy import and_
 
 
@@ -27,7 +27,7 @@ from sqlalchemy import and_
 def auth_user(username, password):
     password = str(hashlib.md5(password.strip().encode('utf-8')).hexdigest())
 
-    return NguoiDung.query.filter(NguoiDung.TenDangNhap.__eq__(username.strip()),
+    return NguoiDung.query.filter(NguoiDung.Email.__eq__(username.strip()),
                                   NguoiDung.MatKhau.__eq__(password)).first()
 
 
@@ -87,13 +87,20 @@ def get_all_user_roles(user_id):
 
 def load_flight(noiDi=None, noiDen=None, ngayDi=None):
     query = ChuyenBay.query
+    gioquydinh = QuyDinhBanVe.query.filter(QuyDinhBanVe.ID_QuyDinh == 3).first()
+    gioquydinh = gioquydinh.ThoiGianKetThucBan * 24  # Giới hạn giờ tính theo quy định (tính giờ theo ngày)
+
+    # Lấy giờ hiện tại và cộng thêm 'gioquydinh' giờ
+    now = datetime.now()
+    limit_time = now + timedelta(hours=gioquydinh)  # Thời gian hiện tại cộng với quy định giờ
 
     if noiDi and noiDen and ngayDi:
         query = query.join(TuyenBay).filter(
             and_(
                 TuyenBay.id_SanBayDi == noiDi,  # Lọc sân bay đi
                 TuyenBay.id_SanBayDen == noiDen,  # Lọc sân bay đến
-                db.func.date(ChuyenBay.gio_Bay) == ngayDi  # Lọc ngày bay
+                db.func.date(ChuyenBay.gio_Bay) == ngayDi,  # Lọc ngày bay
+                ChuyenBay.gio_Bay > limit_time  # Lọc giờ bay lớn hơn giờ quy định
             )
         )
     return query.all()
@@ -168,15 +175,20 @@ def get_filtered_flights(san_bay_di=None, san_bay_den=None, thoi_gian=None, gh1=
 
     # Thêm ràng buộc chỉ trả về chuyến bay trước 4 giờ kể từ thời điểm hiện tại
     four_hours_from_now = datetime.now() + timedelta(hours=4)
-    query = query.filter(ChuyenBay.gio_Bay <= four_hours_from_now)
+    query = query.filter(ChuyenBay.gio_Bay >= four_hours_from_now)
 
     # Trả về kết quả với phân trang
     return query.paginate(page=page, per_page=per_page)
 
 
 def get_flights(san_bay_di, san_bay_den, thoi_gian, gh1, gh2):
+    from datetime import datetime, timedelta
+
     # Chuyển đổi 'thoi_gian' từ dạng chuỗi sang đối tượng datetime
     thoi_gian_date = datetime.strptime(thoi_gian, '%Y-%m-%d')
+
+    # Tính thời gian hiện tại cộng thêm 4 giờ
+    gio_bay_toi_da = datetime.now() + timedelta(hours=4)
 
     # Tạo truy vấn SQL
     query = text("""
@@ -193,6 +205,7 @@ def get_flights(san_bay_di, san_bay_den, thoi_gian, gh1, gh2):
         WHERE TuyenBay.id_SanBayDi = :san_bay_di
           AND TuyenBay.id_SanBayDen = :san_bay_den
           AND ChuyenBay.gio_Bay >= :thoi_gian
+          AND ChuyenBay.gio_Bay <= :gio_bay_toi_da
           AND (ChuyenBay.GH1 - ChuyenBay.GH1_DD) >= :gh1
           AND (ChuyenBay.GH2 - ChuyenBay.GH2_DD) >= :gh2
     """)
@@ -202,6 +215,7 @@ def get_flights(san_bay_di, san_bay_den, thoi_gian, gh1, gh2):
         'san_bay_di': san_bay_di,
         'san_bay_den': san_bay_den,
         'thoi_gian': thoi_gian_date,
+        'gio_bay_toi_da': gio_bay_toi_da,
         'gh1': gh1,
         'gh2': gh2
     }).mappings()  # Trả về kết quả dưới dạng dictionary
@@ -212,7 +226,7 @@ def get_flights(san_bay_di, san_bay_den, thoi_gian, gh1, gh2):
         flights.append({
             "id": row['id_TuyenBay'],  # Truy cập bằng tên cột
             "hành_trình": row['tenTuyen'],
-            "thời_gian": row['gio_Bay'].strftime('%Y-%m-%d'),
+            "thời_gian": row['gio_Bay'].strftime('%Y-%m-%d %H:%M:%S'),
             "ghế_hạng_1_còn_trống": row['ghe_hang_1_con_trong'],
             "GH1": row['GH1'],
             "ghế_hạng_2_còn_trống": row['ghe_hang_2_con_trong'],
@@ -221,6 +235,7 @@ def get_flights(san_bay_di, san_bay_den, thoi_gian, gh1, gh2):
         })
 
     return flights
+
 
 def get_id_san_bay(ten_san_bay_full):
     """
@@ -745,7 +760,7 @@ def add_user2(hoten, email, matkhau, sdt, gioitinh):
             raise ValueError("Giá trị GioiTinh không hợp lệ")
 
         # Mã hóa mật khẩu
-        matkhau_hashed = hashlib.md5(matkhau.strip().encode('utf-8')).hexdigest()
+        matkhau_hashed = str(hashlib.md5(matkhau.strip().encode('utf-8')).hexdigest())
         logging.debug("Mật khẩu đã được mã hóa.")
 
         # Tạo đối tượng người dùng
@@ -792,7 +807,7 @@ def assign_role_to_user(user_id, role):
         # Tạo đối tượng ánh xạ giữa người dùng và vai trò
         new_role_mapping = NguoiDung_VaiTro(
             ID_User=user_id,
-            ID_VaiTro=role_enum_value.value  # Enum lưu giá trị dạng số
+            ID_VaiTro=role_enum_value
         )
 
         # Thêm vào cơ sở dữ liệu
@@ -822,3 +837,105 @@ def get_chuyen_bay_by_month(month=None):
         return ChuyenBay.query.filter(extract('month', ChuyenBay.gio_Bay) == int(month)).all()
     return ChuyenBay.query.all()
 
+def update_user(user_id, hoten, email, sdt, gioitinh):
+    user = NguoiDung.query.get(user_id)
+    if user:
+        user.HoTen = hoten
+        user.Email = email
+        user.SDT = sdt
+        user.GioiTinh = gioitinh
+        db.session.commit()
+
+def delete_user(user_id):
+    user = NguoiDung.query.get(user_id)
+    if user:
+        db.session.delete(user)
+        db.session.commit()
+
+
+# Lấy các vai trò hiện tại của người dùng từ bảng NguoiDung_VaiTro
+def get_user_roles(user_id):
+    roles = db.session.query(NguoiDung_VaiTro).filter(NguoiDung_VaiTro.ID_User == user_id).all()
+    return [role.ID_VaiTro for role in roles]
+
+
+# Cập nhật vai trò cho người dùng
+def update_user_roles2(user_id, roles):
+    # Xóa các vai trò cũ
+    db.session.query(NguoiDung_VaiTro).filter(NguoiDung_VaiTro.ID_User == user_id).delete()
+
+    # Thêm các vai trò mới
+    for role in roles:
+        new_role_mapping = NguoiDung_VaiTro(ID_User=user_id, ID_VaiTro=role)
+        db.session.add(new_role_mapping)
+
+    db.session.commit()
+
+
+def cong_doanh_Thu(tbDoanhThu, ttien):
+    tuyenBay = TuyenBay.query.filter(TuyenBay.tenTuyen==tbDoanhThu).first()
+    if tuyenBay:
+        tuyenBay.doanhThu += ttien
+        db.session.commit()
+
+
+# Phương thức lấy dữ liệu bảng BangGiaVe và SanBay kết hợp
+def get_bang_gia_ve():
+    # Tạo alias cho bảng SanBay
+    sanbay_di = aliased(SanBay)
+    sanbay_den = aliased(SanBay)
+
+    # Thực hiện truy vấn với các alias
+    return db.session.query(BangGiaVe.ID, BangGiaVe.LoaiHangGhe, sanbay_di.ten_SanBay.label('SanBayDi'),
+                            sanbay_den.ten_SanBay.label('SanBayDen'), BangGiaVe.Gia_Ve) \
+        .join(sanbay_di, BangGiaVe.ID_SanBayDi == sanbay_di.id_SanBay) \
+        .join(sanbay_den, BangGiaVe.ID_SanBayDen == sanbay_den.id_SanBay) \
+        .order_by(BangGiaVe.ID.asc()) \
+        .all()
+
+# Phương thức cập nhật giá vé
+def update_gia_ve(id, gia_ve_moi):
+    bang_gia_ve = BangGiaVe.query.get(id)
+    if bang_gia_ve:
+        bang_gia_ve.Gia_Ve = gia_ve_moi
+        db.session.commit()
+        return True
+    return False
+
+
+def cong_soluongghe(sanbaydi, sanbayden, hangGhe, tongGhe):
+    # Truy vấn sân bay đi và đến
+    sanBayDi = SanBay.query.filter(SanBay.ten_SanBay == sanbaydi).first()
+    sanBayDen = SanBay.query.filter(SanBay.ten_SanBay == sanbayden).first()
+
+    # Kiểm tra nếu sân bay không tồn tại
+    if not sanBayDi or not sanBayDen:
+        return None
+
+    # Truy vấn tuyến bay
+    tuyenbay = TuyenBay.query.filter(
+        TuyenBay.id_SanBayDi == sanBayDi.id_SanBay,
+        TuyenBay.id_SanBayDen == sanBayDen.id_SanBay
+    ).first()
+
+    # Kiểm tra nếu tuyến bay không tồn tại
+    if not tuyenbay:
+        return None
+
+    # Truy vấn chuyến bay
+    chuyenbay = ChuyenBay.query.filter(ChuyenBay.id_TuyenBay == tuyenbay.id_TuyenBay).first()
+
+    # Kiểm tra nếu chuyến bay không tồn tại
+    if not chuyenbay:
+        return None
+
+    # Cập nhật số lượng ghế đã đặt
+    if hangGhe == 1:
+        chuyenbay.GH1_DD += tongGhe
+    else:
+        chuyenbay.GH2_DD += tongGhe
+
+    # Lưu lại thay đổi
+    db.session.commit()
+
+    return chuyenbay

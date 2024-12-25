@@ -1,0 +1,37 @@
+{% extends 'layout/base.html' %}
+{% block content %}
+<body>
+    <h1>Bảng Giá Vé</h1>
+    <table  style="background-color:white; border: 1px solid #ddd; ">
+        <thead style="font-size:2.4rem; text-align: center;">
+            <tr>
+                <th style="width:10%; border: 1px solid #ddd;">ID</th>
+                <th style="width:10%; border: 1px solid #ddd;">Loại hạng ghế</th>
+                <th style="width:10%; border: 1px solid #ddd;">Sân bay đi</th>
+                <th style="width:10%; border: 1px solid #ddd;">Sân Bay đến</th>
+                <th style="width:10%; border: 1px solid #ddd;">Giá vé</th>
+                <th style="width:10%; border: 1px solid #ddd;">Cập nhật giá:</th>
+            </tr>
+        </thead>
+        <tbody style="font-size:2.4rem; text-align: center;">
+            {% for bang_gia in bang_gia_ve %}
+            <tr>
+                    <td style="border: 1px solid #ddd;">{{ bang_gia.ID }}</td>
+                    <td style="border: 1px solid #ddd;">{{ bang_gia.LoaiHangGhe }}</td>
+                    <td style="border: 1px solid #ddd;">{{ bang_gia.SanBayDi }}</td>
+                    <td style="border: 1px solid #ddd;">{{ bang_gia.SanBayDen }}</td>
+                    <td style="border: 1px solid #ddd;">{{ bang_gia.Gia_Ve }}</td>
+                <td style="border: 1px solid #ddd;">
+                    <form action="/banggiave" method="POST" style="display:inline; border: 1px solid #ddd;">
+                        <input type="hidden" name="id" value="{{ bang_gia.ID }}">
+                        <input type="number" name="Gia_Ve" value="" required>
+                        <button type="submit">Sửa</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+
+{% endblock %}

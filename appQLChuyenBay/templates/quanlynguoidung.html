@@ -19,15 +19,16 @@
         </select>
 
         <div id="roles-container" style="display: contents;">
-            <!-- Các vai trò sẽ được thêm vào đây -->
+            <select id="role-template1" name="roles[]" style="padding: 10px; font-size: 1.6rem;">
+                <option value="" disabled>Chọn vai trò</option>
+                {% for role in all_roles %}
+                    <option value="{{ role }}">{{ role }}</option>
+                {% endfor %}
+            </select>
+
         </div>
 
-        <select id="role-template" name="roles[]" style="display: none; padding: 10px; font-size: 1.6rem;">
-            <option value="" disabled>Chọn vai trò</option>
-            {% for role in all_roles %}
-                <option value="{{ role }}">{{ role }}</option>
-            {% endfor %}
-        </select>
+
 
         <button type="button" id="add-role-btn" style="padding: 10px 20px; font-size: 1.6rem; background-color: #28a745; color: white; border: none; cursor: pointer;">Thêm vai trò</button>
         <button type="submit" style="padding: 10px 20px; font-size: 1.6rem; background-color: #28a745; color: white; border: none; cursor: pointer;">Thêm người dùng</button>
@@ -77,41 +78,46 @@
     document.addEventListener('DOMContentLoaded', function() {
         const addRoleBtn = document.getElementById('add-role-btn');
         const rolesContainer = document.getElementById('roles-container');
-        const roleTemplate = document.getElementById('role-template');
+        const roleTemplate = document.getElementById('role-template1');
         const addUserForm = document.getElementById('add-user-form');
         const maxRoles = 2; // Giới hạn số vai trò tối đa
 
         // Hàm để thêm vai trò mới
         addRoleBtn.addEventListener('click', function() {
-            const currentRoles = document.querySelectorAll('#roles-container select').length;
-            if (currentRoles < maxRoles) {
-                const newRoleSelect = roleTemplate.cloneNode(true);
-                newRoleSelect.style.display = 'block'; // Hiển thị select
-                newRoleSelect.name="roles[]"; // Đảm bảo đúng tên
+    const currentRoles = document.querySelectorAll('#roles-container select').length; // Số lượng select hiện tại
+    const maxRoles = 2; // Giới hạn số lượng vai trò
 
-                // Tạo nút Xóa cho vai trò
-                const deleteBtn = document.createElement('button');
-                deleteBtn.type = 'button';
-                deleteBtn.textContent = 'Xóa';
-                deleteBtn.style.padding = '5px 10px';
-                deleteBtn.style.fontSize = '1.6rem';
-                deleteBtn.style.backgroundColor = '#dc3545';
-                deleteBtn.style.color = 'white';
-                deleteBtn.style.border = 'none';
-                deleteBtn.style.cursor = 'pointer';
+    if (currentRoles < maxRoles) {
+        // Clone template select
+        const newRoleSelect = roleTemplate.cloneNode(true);
+        newRoleSelect.style.display = 'block'; // Hiển thị select mới
+        newRoleSelect.id = `role-template${currentRoles + 1}`; // Đảm bảo ID duy nhất cho mỗi select
+        newRoleSelect.name = 'roles[]'; // Đảm bảo đúng tên để gửi form
 
-                deleteBtn.addEventListener('click', function() {
-                    newRoleSelect.remove(); // Xóa vai trò khi nhấn nút Xóa
-                    deleteBtn.remove(); // Xóa nút Xóa
-                });
+        // Tạo nút Xóa cho vai trò
+        const deleteBtn = document.createElement('button');
+        deleteBtn.type = 'button';
+        deleteBtn.textContent = 'Xóa';
+        deleteBtn.style.padding = '5px 10px';
+        deleteBtn.style.fontSize = '1.6rem';
+        deleteBtn.style.backgroundColor = '#dc3545';
+        deleteBtn.style.color = 'white';
+        deleteBtn.style.border = 'none';
+        deleteBtn.style.cursor = 'pointer';
 
-                // Thêm vai trò mới vào container
-                rolesContainer.appendChild(newRoleSelect);
-                rolesContainer.appendChild(deleteBtn);
-            } else {
-                alert('Tối đa chỉ có 2 vai trò');
-            }
+        // Lắng nghe sự kiện click để xóa select
+        deleteBtn.addEventListener('click', function() {
+            newRoleSelect.remove(); // Xóa vai trò khi nhấn nút Xóa
+            deleteBtn.remove(); // Xóa nút Xóa
         });
+
+        // Thêm vai trò mới và nút xóa vào container
+        rolesContainer.appendChild(newRoleSelect);
+        rolesContainer.appendChild(deleteBtn);
+    } else {
+        alert('Tối đa chỉ có 2 vai trò');
+    }
+});
 
         // Kiểm tra trùng vai trò khi gửi form
         addUserForm.addEventListener('submit', function(event) {

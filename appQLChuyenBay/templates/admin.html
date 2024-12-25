@@ -29,12 +29,12 @@
                     <span class="material-symbols-outlined">grid_view</span>
                     <h3>Bảng Điều Khiển</h3>
                 </a>
-                <a href="#" >
+                <a href="/thaydoiquydinh" >
                     <span class="material-symbols-outlined">person_outline</span>
-                    <h3>Người Dùng</h3>
+                    <h3>Thay đổi quy định</h3>
                 </a>
 
-                <a href="{{ url_for('quanlynguoidung') }}?id=124" class="">
+                <a href="/quanlynguoidung" class="">
                     <span class="material-symbols-outlined">groups</span>
                     <h3>Quản lý người dùng</h3>
                 </a>
@@ -68,7 +68,7 @@
                     <span class="material-symbols-outlined">lock</span>
                     <h3>Đổi Mật Khẩu</h3>
                 </a>
-                <a href="#">
+                <a href="/logout">
                     <span class="material-symbols-outlined">logout</span>
                     <h3>Đăng Xuất</h3>
                 </a>
@@ -179,12 +179,10 @@
                 </div>
                 <div class="profile">
                     <div class="info">
-                        <p><b>Le Viet Hai Quan</b></p>
                         <p>Admin</p>
                         <small class="text-muted"></small>
                     </div>
                     <div class="profile-photo">
-                        <img src="{{ url_for('static', filename='img/LeVietHaiQuan.jpg') }}" alt="Ảnh admin page :D">
                     </div>
                 </div>
                 {%  endblock %}
@@ -196,7 +194,6 @@
                 <div class="updates">
                 <div class="update">
                     <div class="profile-photo">
-                        <img src="{{ url_for('static', filename='img/user.jpg') }}" alt="">
                     </div>
                     <div class="message">
                         <p><b>HaiQuan</b> Đã đăng nhập lúc 10:00a.m</p>
@@ -205,7 +202,6 @@
 <!--                -->
                 <div class="update">
                     <div class="profile-photo">
-                        <img src="{{ url_for('static', filename='img/user.jpg') }}" alt="">
                     </div>
                     <div class="message">
                         <p><b>VanMai</b> Đã đăng nhập lúc 9:09a.m</p>
@@ -214,7 +210,6 @@
 <!--                    -->
                      <div class="update">
                     <div class="profile-photo">
-                        <img src="{{ url_for('static', filename='img/user.jpg') }}" alt="">
                     </div>
                     <div class="message">
                         <p><b>XuanChinh</b> Đã đăng xuất lúc 7:30 a.m</p>

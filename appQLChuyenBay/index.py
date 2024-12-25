@@ -419,7 +419,7 @@ def datveonline():
         maChuyenBay = request.args.get('maChuyenBay')
         if maChuyenBay:
             session['maChuyenBay'] = maChuyenBay
-
+            session['tuyenBaydoanhthu'] = dao.get_TuyenBay(maChuyenBay)
     elif request.method == 'POST':
         # Lấy giá trị từ form
         session['hangGhe'] = request.form.get('hangGhe')
@@ -616,6 +616,27 @@ def thanhtoanthanhcong():
 def thaydoiquydinh():
     return render_template('thaydoiquydinh.html')
 
+@app.route('/banggiave', methods=['GET', 'POST'])
+def banggiave():
+    # Lấy dữ liệu từ dao.py
+    bang_gia_ve = dao.get_bang_gia_ve()
+
+    if request.method == 'POST':
+        # Lấy ID và giá mới từ form
+        gia_ve_id = request.form.get('id')
+        gia_ve_moi = request.form.get('Gia_Ve')
+
+        # Cập nhật giá vé thông qua dao.py
+        if dao.update_gia_ve(gia_ve_id, gia_ve_moi):
+            flash('Cập nhật giá vé thành công!', 'success')
+        else:
+            flash('Không tìm thấy giá vé cần sửa.', 'danger')
+
+        return redirect(url_for('banggiave'))
+
+    # Render trang hiển thị bảng
+    return render_template('banggiave.html', bang_gia_ve=bang_gia_ve)
+
 
 @app.route('/quydinhbanve')
 def quydinhbanve():
@@ -780,6 +801,14 @@ def success():
             # Lưu thông tin khách hàng
             for h in hanhKhach:
                 dao.save_customer_info(h['fullName'], h['cccd'], h['phone'], 2)  # Chỉnh sửa cách truy cập các giá trị từ dict
+            tbDoanhThu=session['tuyenBaydoanhthu']
+            ttien=session['tongTien']
+            luufile = dao.cong_doanh_Thu(tbDoanhThu=tbDoanhThu, ttien=ttien)
+            hangGhe=session['hangGhe']
+            tongGhe=session['tongGhe']
+            sanbaydi=session['sanBayDi']
+            sanbayden=session['sanBayDen']
+            dao.cong_soluongghe(sanbaydi, sanbayden, hangGhe, tongGhe)
         except Exception as e:
             db.session.rollback()
             app.logger.error(f"Lỗi khi lưu thông tin khách hàng: {str(e)}")
@@ -790,63 +819,84 @@ def success():
 
 @app.route('/admin/')
 def admin():
-    from dao import get_ten_tuyen_bay
-    from models import TuyenBay, ChuyenBay
+    user_id = session.get('_user_id')  # Kiểm tra vai trò của người dùng
+    user_role = dao.get_user_role(user_id)
+    user_role_change = dao.change_user_role(user_role)
+    if 'NguoiQuanTri' in user_role_change:
+        from dao import get_ten_tuyen_bay
+        from models import TuyenBay, ChuyenBay
 
-    # Lấy dữ liệu từ CSDL
-    tuyenbays = TuyenBay.query.all()
-    chuyenbays = ChuyenBay.query.all()
+        # Lấy dữ liệu từ CSDL
+        tuyenbays = TuyenBay.query.all()
+        chuyenbays = ChuyenBay.query.all()
 
-    # Tính tổng doanh thu
-    total_revenue = sum(ty.doanhThu for ty in tuyenbays)
+        # Tính tổng doanh thu
+        total_revenue = sum(ty.doanhThu for ty in tuyenbays)
 
-    # Tính tổng số lượt bay
-    total_flights = sum(ty.soLuotBay for ty in tuyenbays)
+        # Tính tổng số lượt bay
+        total_flights = sum(ty.soLuotBay for ty in tuyenbays)
 
-    # Tính tổng số ghế và số ghế đã đặt
-    total_seats = sum(cb.GH1 + cb.GH2 for cb in chuyenbays)
-    occupied_seats = sum(cb.GH1_DD + cb.GH2_DD for cb in chuyenbays)
+        occupied_seats = sum(
+            (cb.GH1_DD if cb.GH1_DD is not None else 0) +
+            (cb.GH2_DD if cb.GH2_DD is not None else 0)
+            for cb in chuyenbays
+        )
 
-    # Tính tỷ lệ ghế đã đặt
-    avg_occupancy_rate = round((occupied_seats / total_seats) * 100, 2) if total_seats > 0 else 0
+        total_seats = sum(
+            (cb.GH1 if cb.GH1 is not None else 0) +
+            (cb.GH2 if cb.GH2 is not None else 0)
+            for cb in chuyenbays
+        )
+        # Tính tỷ lệ ghế đã đặt
+        avg_occupancy_rate = round((occupied_seats / total_seats) * 100, 2) if total_seats > 0 else 0
 
-    # Lấy dữ liệu chi tiết chuyến bay
-    chuyen_bay_info = [
-        {
-            'id_chuyen_bay': cb.id_ChuyenBay,
-            'ten_tuyen_bay': get_ten_tuyen_bay(cb.id_TuyenBay),
-            'ma_tuyen_bay': cb.id_TuyenBay,
-            'so_luong_hanh_khach': f"{cb.GH1_DD + cb.GH2_DD}/{cb.GH1 + cb.GH2}"
-        }
-        for cb in chuyenbays
-    ]
+        # Lấy dữ liệu chi tiết chuyến bay
+        chuyen_bay_info = [
+            {
+                'id_chuyen_bay': cb.id_ChuyenBay,
+                'ten_tuyen_bay': get_ten_tuyen_bay(cb.id_TuyenBay),
+                'ma_tuyen_bay': cb.id_TuyenBay,
+                'so_luong_hanh_khach': f"{(cb.GH1_DD if cb.GH1_DD is not None else 0) + (cb.GH2_DD if cb.GH2_DD is not None else 0)}/{(cb.GH1 if cb.GH1 is not None else 0) + (cb.GH2 if cb.GH2 is not None else 0)}"
+            }
+            for cb in chuyenbays
+        ]
 
-    return render_template('admin.html', total_revenue=total_revenue,
-                           total_flights=total_flights,
-                           avg_occupancy_rate=avg_occupancy_rate,
-                           chuyen_bay_info=chuyen_bay_info)
+        return render_template('admin.html', total_revenue=total_revenue,
+                               total_flights=total_flights,
+                               avg_occupancy_rate=avg_occupancy_rate,
+                               chuyen_bay_info=chuyen_bay_info)
+    else:
+        return render_template('index.html')
+
 
 
 @app.route('/admin/thongkebaocao')
 def thongkebaocao():
-    def get_tuyen_bay_data():
-        from models import TuyenBay
-        return TuyenBay.query.all()
+    user_id = session.get('_user_id')  # Kiểm tra vai trò của người dùng
+    user_role = dao.get_user_role(user_id)
+    user_role_change = dao.change_user_role(user_role)
+    if 'NguoiQuanTri' in user_role_change:
+        def get_tuyen_bay_data():
+            from models import TuyenBay
+            return TuyenBay.query.all()
 
-    # Lấy tham số tháng từ request
-    month = request.args.get('month', 'all')
+        # Lấy tham số tháng từ request
+        month = request.args.get('month', 'all')
 
-    # Lấy dữ liệu chuyến bay theo tháng
-    chuyenbays = dao.get_chuyen_bay_by_month(month)
+        # Lấy dữ liệu chuyến bay theo tháng
+        chuyenbays = dao.get_chuyen_bay_by_month(month)
 
-    tuyenbays = get_tuyen_bay_data()
-    data = [tb for tb in tuyenbays if tb.id_TuyenBay in {cb.id_TuyenBay for cb in chuyenbays}]
+        tuyenbays = get_tuyen_bay_data()
+        data = [tb for tb in tuyenbays if tb.id_TuyenBay in {cb.id_TuyenBay for cb in chuyenbays}]
 
-    # Biến labels và values dùng cho biểu đồ
-    labels = [tb.tenTuyen for tb in data]
-    values = [tb.doanhThu for tb in data]
+        # Biến labels và values dùng cho biểu đồ
+        labels = [tb.tenTuyen for tb in data]
+        values = [tb.doanhThu for tb in data]
 
-    return render_template('thongkebaocao.html', data=data, labels=labels, values=values, selected_month=month)
+        return render_template('thongkebaocao.html', data=data, labels=labels, values=values, selected_month=month)
+    else:
+        return render_template('index.html')
+
 
 @app.route('/admin/quanlynguoidung', methods=['GET', 'POST'])
 def quanlynguoidung():
@@ -930,8 +980,35 @@ def get_roles_by_user(id_user):
             'error': str(e)
         }), 500
 
+@app.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])
+def edit_user(user_id):
+    # Lấy thông tin người dùng từ cơ sở dữ liệu
+    user = dao.get_user_by_id(user_id)
+    if not user:
+        flash('Người dùng không tồn tại.', 'danger')
+        return redirect(url_for('user_list'))  # Redirect đến danh sách người dùng nếu không tìm thấy
+
+    if request.method == 'POST':
+        # Lấy dữ liệu từ form
+        hoten = request.form.get('HoTen')
+        email = request.form.get('Email')
+        sdt = request.form.get('SDT')
+        gioitinh = request.form.get('GioiTinh')
+        # Cập nhật thông tin người dùng trong cơ sở dữ liệu
+        dao.update_user(user_id, hoten, email, sdt, gioitinh)
+        flash('Cập nhật người dùng thành công!', 'success')
+        return redirect(url_for('user_list'))  # Quay lại danh sách người dùng sau khi sửa
+
+    # Trả về trang sửa với dữ liệu người dùng hiện tại
+    return render_template('edit_user.html', user=user)
 
 
+@app.route('/delete_user/<int:user_id>', methods=['POST'])
+def delete_user(user_id):
+    # Xóa người dùng khỏi cơ sở dữ liệu
+    dao.delete_user(user_id)
+    flash('Đã xóa người dùng thành công!', 'success')
+    return redirect(url_for('user_list'))  # Quay lại danh sách người dùng
 
 if __name__ == '__main__':
     with app.app_context():

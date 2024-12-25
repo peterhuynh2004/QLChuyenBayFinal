@@ -20,7 +20,7 @@
                 <!-- Kết quả chuyến bay sẽ được thêm vào đây -->
                 {% if flight %}
                 {% for f in flight %}
-                {% if f.GH1 + f.GH2 - f.GH1_DD - f.GH2_DD >= tongVe %}
+                {% if (f.GH1 or 0) + (f.GH2 or 0) - (f.GH1_DD or 0) - (f.GH2_DD or 0) >= tongVe %}
                 <form action="/datveonline" method="get">
                     <tr>
                         <td> FL{{ f.id_ChuyenBay }}</td>
